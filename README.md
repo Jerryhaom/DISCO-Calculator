@@ -12,23 +12,23 @@ DISCO quantifies how much one person's biomarker profile perturbs the
 correlation structure of a young, healthy reference population:
 
 $$
-\text{DISCO}_i = \log\!\Big( n_{\text{ref}}^2 \sum_{j,k} w_{jk}\, \big( \text{PCC}_{jk}^{\text{ref}} - \text{PCC}_{jk}^{\text{ref}+i} \big)^2 \Big)
+\mathrm{DISCO}_i \;=\; \log\Bigg[\; n_{\mathrm{ref}}^{\,2} \sum_{j \neq k} w_{jk}\, \Big( \rho_{jk}^{\mathrm{ref}} \;-\; \rho_{jk}^{\mathrm{ref}+i} \Big)^{\!2} \;\Bigg]
 $$
 
-where $\text{PCC}^{\text{ref}}$ is the reference correlation matrix,
-$\text{PCC}^{\text{ref}+i}$ is the correlation matrix after adding individual
-$i$, $w$ is an age-based weight matrix, and $n_{\text{ref}}$ is the reference
+where $\rho^{\mathrm{ref}}$ is the reference correlation matrix,
+$\rho^{\mathrm{ref}+i}$ is the correlation matrix after adding individual
+$i$, $w$ is an age-based weight matrix, and $n_{\mathrm{ref}}$ is the reference
 sample size.
 
 DM (Mahalanobis distance) quantifies the standardized deviation of the
 biomarker vector from the reference mean:
 
 $$
-\text{DM}_i = \log\!\Big( \sqrt{ (x_i - \mu)^\top \, S^{-1} \, (x_i - \mu) } \Big)
+\mathrm{DM}_i \;=\; \log\Bigg[\; \sqrt{\, (x_i - \mu)^{\top} \; \Sigma^{-1} \; (x_i - \mu) \,} \;\Bigg]
 $$
 
-where $\mu$ and $S$ are the mean vector and covariance matrix of the reference
-population.
+where $\mu$ and $\Sigma$ are the mean vector and covariance matrix of the
+reference population.
 
 ## How values are estimated — no raw data required
 
@@ -36,8 +36,8 @@ Both metrics are computed entirely from a **standard reference matrix** of
 aggregate statistics:
 
 - $\mu$ — reference mean vector (10 values)
-- $ss$ — cross-product matrix, from which the covariance $S = ss/(n_{\text{ref}}-1)$
-  and correlation matrix $\text{PCC}$ are derived ($10\times10$)
+- $ss$ — cross-product matrix, from which the covariance $\Sigma = ss/(n_{\text{ref}}-1)$
+  and correlation matrix $\rho$ are derived ($10\times10$)
 - $w$ — age-based weight matrix ($10\times10$)
 - $n_{\text{ref}}$ — reference sample size
 
@@ -45,7 +45,7 @@ No individual-level reference data is stored or required. Given a person's own
 10 biomarker values, DISCO is obtained by the rank-one update
 $ss_{\text{new}} = ss + \frac{n_{\text{ref}}}{n_{\text{ref}}+1}\,\delta\delta^{\top}$
 (where $\delta = x - \mu$), and DM by the usual quadratic form
-$(x-\mu)^{\top} S^{-1} (x-\mu)$. The reference matrix is derived from UK
+$(x-\mu)^{\top} \Sigma^{-1} (x-\mu)$. The reference matrix is derived from UK
 Biobank participants aged $\le 40$ (n = 5,282) and is freely redistributable.
 
 ## Inputs (10 biomarkers)
