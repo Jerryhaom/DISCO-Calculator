@@ -39,11 +39,11 @@ reference population.
 Both metrics are computed entirely from a **standard reference matrix** of
 aggregate statistics:
 
-- $\mu$ — reference mean vector (10 values)
-- $ss$ — cross-product matrix, from which the covariance $\Sigma = ss/(n_{\text{ref}}-1)$
+- $\mu$  reference mean vector (10 values)
+- $ss$  cross-product matrix, from which the covariance $\Sigma = ss/(n_{\text{ref}}-1)$
   and correlation matrix $\rho$ are derived ($10\times10$)
-- $w$ — age-based weight matrix ($10\times10$)
-- $n_{\text{ref}}$ — reference sample size
+- $w$  age-based weight matrix ($10\times10$)
+- $n_{\text{ref}}$  reference sample size
 
 No individual-level reference data is stored or required. Given a person's own
 10 biomarker values, DISCO is obtained by the rank-one update
