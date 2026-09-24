@@ -156,17 +156,6 @@ and covariate recodes are in that script. Only aggregate JSON is written;
 the controlled source files must remain outside this repository. The Python
 renderer embeds the tables in HTML so they also work when opened as a local file.
 
-The page also explains reference-size recommendations, cross-cohort reference
-transfer, and the limits of comparisons with epigenetic clocks. Supporting
-aggregate results are in [`data/reference-stability.json`](data/reference-stability.json)
-(NHANES **24-marker** sensitivity analysis, 50 resamples at each reference size)
-and [`data/reference-transport.json`](data/reference-transport.json)
-(fixed UKB versus cohort-specific references on the same participants).
-The 24-marker stability result is not a direct validation of a minimum reference
-size for the calculator's 10-marker panel. Cross-cohort C-index comparisons
-describe locally fitted Cox models, not external validation of a frozen
-mortality prediction model.
-
 ## Checks
 
 Run the dependency-free regression checks with Node.js 18 or newer:
