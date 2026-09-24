@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DISCO Calculator — Distance of Covariance</title>
+<title>DISCO Calculator</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script>
 window.MathJax = {
@@ -12,41 +12,152 @@ window.MathJax = {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 <style>
-:root { --primary:#2c3e50; --secondary:#3498db; --accent:#e74c3c; }
-body { background:linear-gradient(rgba(255,255,255,0.92),rgba(255,255,255,0.92)),
-             url('Ai-image.jpg') center/cover; font-family:'Segoe UI',system-ui,sans-serif; min-height:100vh; }
-.calculator-container { max-width:1200px; margin:2rem auto; padding:2rem; background:rgba(255,255,255,0.96);
-    border-radius:20px; box-shadow:0 12px 40px rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.3); }
-.input-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1.2rem; margin:2rem 0; }
-.input-group label { display:block; margin-bottom:0.5rem; font-weight:600; color:var(--primary); }
-.input-group input { width:100%; padding:0.8rem; border:2px solid #dfe6e9; border-radius:8px; transition:all 0.3s ease; }
-.input-group input:focus { border-color:var(--secondary); box-shadow:0 0 0 3px rgba(52,152,219,0.2); }
-.reference-range { font-size:0.85rem; color:#7f8c8d; margin-top:0.4rem; }
-#resultSection { background:linear-gradient(135deg,#e3f2fd 0%,#bbdefb 100%); border-radius:12px; padding:1.5rem;
-    margin-top:2rem; opacity:0; transform:translateY(10px); transition:all 0.4s ease; }
+:root {
+  --primary:#1a2a4a;
+  --primary-2:#243b5e;
+  --secondary:#2563eb;
+  --secondary-2:#1d4ed8;
+  --accent:#dc2626;
+  --ink:#1f2937;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+  --bg-soft:#f4f6fb;
+  --card:#ffffff;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 15% -10%, #dbeafe 0%, transparent 55%),
+    radial-gradient(1000px 500px at 110% 10%, #e0f2fe 0%, transparent 50%),
+    linear-gradient(180deg, #f7fafc 0%, #eef2f7 100%);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+a { color:var(--secondary); }
+.wrap { max-width:1080px; margin:0 auto; padding:2rem 1.25rem 3rem; }
+.header {
+  text-align:center;
+  padding:2.25rem 1.5rem 1.75rem;
+  background:linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 60%, #1e3a5f 100%);
+  color:#fff;
+  border-radius:18px;
+  box-shadow:0 16px 40px rgba(26,42,74,0.25);
+  position:relative;
+  overflow:hidden;
+}
+.header::after {
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(500px 200px at 85% -20%, rgba(255,255,255,0.12), transparent 60%),
+    radial-gradient(400px 220px at 0% 120%, rgba(56,189,248,0.16), transparent 60%);
+  pointer-events:none;
+}
+.header h1 { margin:0 0 0.5rem; font-size:2.1rem; font-weight:700; letter-spacing:-0.02em; }
+.header .sub { margin:0 auto; max-width:760px; font-size:1.02rem; line-height:1.6; color:#dbe7f7; }
+.header .badge-row { margin-top:1.1rem; display:flex; gap:0.6rem; justify-content:center; flex-wrap:wrap; }
+.chip {
+  font-size:0.78rem; font-weight:600; padding:0.32rem 0.8rem; border-radius:999px;
+  background:rgba(255,255,255,0.14); color:#fff; border:1px solid rgba(255,255,255,0.22);
+}
+.card {
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(16,24,40,0.06);
+  padding:1.5rem;
+  margin-top:1.5rem;
+}
+.card h2 { margin:0 0 0.4rem; font-size:1.15rem; color:var(--primary); font-weight:700; }
+.card .lead { margin:0 0 1rem; color:var(--muted); font-size:0.92rem; }
+select.form-select {
+  max-width:320px; padding:0.6rem 0.9rem; border:1.5px solid var(--line); border-radius:10px;
+  background:#fff; font-weight:500; color:var(--ink); cursor:pointer;
+}
+select.form-select:focus { outline:none; border-color:var(--secondary); box-shadow:0 0 0 3px rgba(37,99,235,0.15); }
+.group-label {
+  margin:1.25rem 0 0.75rem; padding-left:0.75rem; border-left:4px solid var(--secondary);
+  font-size:0.82rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted);
+}
+.input-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:1rem; }
+.input-group {
+  background:#fbfcfe; border:1px solid var(--line); border-radius:12px; padding:0.85rem 1rem;
+  transition:border-color .2s, box-shadow .2s;
+}
+.input-group:focus-within { border-color:var(--secondary); box-shadow:0 0 0 3px rgba(37,99,235,0.12); }
+.input-group label { display:block; font-size:0.86rem; font-weight:600; color:var(--ink); margin-bottom:0.4rem; }
+.input-group input { width:100%; padding:0.5rem 0.65rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.95rem; }
+.input-group input:focus { outline:none; border-color:var(--secondary); }
+.reference-range { font-size:0.74rem; color:var(--muted); margin-top:0.4rem; }
+.btn-calc {
+  display:block; width:100%; margin-top:1.5rem; padding:0.95rem; border:none; border-radius:12px;
+  background:linear-gradient(135deg, var(--secondary) 0%, var(--secondary-2) 100%);
+  color:#fff; font-size:1.05rem; font-weight:700; letter-spacing:0.02em; cursor:pointer;
+  box-shadow:0 8px 20px rgba(37,99,235,0.28); transition:transform .15s, box-shadow .15s;
+}
+.btn-calc:hover { transform:translateY(-1px); box-shadow:0 12px 26px rgba(37,99,235,0.34); }
+.btn-calc:active { transform:translateY(0); }
+#resultSection {
+  opacity:0; transform:translateY(12px); transition:opacity .45s ease, transform .45s ease;
+  margin-top:1.5rem; background:linear-gradient(135deg,#eef4ff 0%,#e6f0ff 100%);
+  border:1px solid #dbe7fb; border-radius:16px; padding:1.5rem;
+}
 #resultSection.show { opacity:1; transform:translateY(0); }
-.risk-badge { display:inline-block; padding:0.4rem 1rem; border-radius:20px; font-weight:600; }
-.metric-box { background:#fff; border-radius:10px; padding:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
-.notes { margin-top:2rem; padding:1.2rem; background:#f8f9fa; border-radius:12px; font-size:0.9rem; color:#555; }
-.references { margin-top:3rem; padding:2rem; background:rgba(255,255,255,0.96); border-radius:20px;
-    box-shadow:0 15px 40px rgba(0,0,0,0.1); }
-.references h2 { color:var(--primary); border-bottom:2px solid var(--secondary); padding-bottom:1rem;
-    margin-bottom:1.5rem; text-align:center; }
-.references li { margin-bottom:0.8rem; }
-.formula { font-family:'Cambria Math','Times New Roman',serif; font-size:0.95rem; }
+.metric-box { background:#fff; border:1px solid #e8eefb; border-radius:14px; padding:1.1rem 1rem; text-align:center; height:100%; }
+.metric-box .m-label { font-size:0.78rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:var(--muted); }
+.metric-box .m-value { font-size:2rem; font-weight:700; color:var(--primary); margin:0.3rem 0; }
+.metric-box .m-value.dm { color:var(--secondary); }
+.risk-badge { display:inline-block; margin-top:0.35rem; padding:0.35rem 0.95rem; border-radius:999px; font-weight:600; font-size:0.82rem; color:#fff; }
+.z-row { display:flex; gap:1.5rem; justify-content:center; margin-top:1.25rem; padding-top:1.25rem; border-top:1px dashed #c7d7f2; }
+.z-cell { text-align:center; }
+.z-cell .z-label { font-size:0.78rem; color:var(--muted); font-weight:600; }
+.z-cell .z-value { font-size:1.5rem; font-weight:700; color:var(--secondary); }
+.note {
+  margin-top:1.5rem; padding:1.15rem 1.25rem; background:#f8fafc; border:1px solid var(--line);
+  border-radius:12px; font-size:0.9rem; line-height:1.65; color:#475569;
+}
+.note .math { display:block; margin:0.8rem 0; text-align:center; overflow-x:auto; }
+.references {
+  margin-top:1.5rem; padding:1.5rem 1.75rem; background:#fff; border:1px solid var(--line);
+  border-radius:16px; box-shadow:0 10px 30px rgba(16,24,40,0.05);
+}
+.references h2 { color:var(--primary); font-size:1.05rem; border-bottom:2px solid var(--secondary);
+    padding-bottom:0.7rem; margin-bottom:1rem; text-align:center; }
+.references ol { padding-left:1.3rem; margin:0; }
+.references li { margin-bottom:0.7rem; font-size:0.88rem; color:var(--ink); line-height:1.55; }
+footer { text-align:center; color:var(--muted); font-size:0.8rem; margin-top:2rem; }
+@media (max-width:640px) {
+  .header h1 { font-size:1.6rem; }
+  .z-row { flex-direction:column; gap:0.8rem; }
+}
 </style>
 </head>
 <body>
-<div class="calculator-container">
-  <h1 class="text-center mb-3" style="color:var(--primary);">DISCO Calculator</h1>
-  <p class="text-center text-muted mb-4">Distance of Covariance (DISCO) — a measure of entropy in biological systems that<br>
-     reveals interconnected increases in entropy across organs with age, predicting mortality, frailty,<br>
-     and chronic disease. Computed from a standard reference matrix derived from UK Biobank (age ≤40, n = 5,282).</p>
+<div class="wrap">
+  <header class="header">
+    <h1>DISCO Calculator</h1>
+    <p class="sub">Distance of Covariance (DISCO), a measure of entropy in biological systems that
+      reveals interconnected increases in entropy across organs with age, predicting mortality,
+      frailty, and chronic disease.</p>
+    <div class="badge-row">
+      <span class="chip">10 biomarkers</span>
+      <span class="chip">Standard reference matrix</span>
+      <span class="chip">UK Biobank (age ≤40, n = 5,282)</span>
+      <span class="chip">No raw data required</span>
+    </div>
+  </header>
 
-  <form id="discoForm">
-    <div class="mb-4">
-      <label class="form-label fw-semibold" style="color:var(--primary);">Reference cohort (for relative z-score)</label>
-      <select id="cohortSelect" class="form-select" style="max-width:300px;">
+  <div class="card">
+    <h2>Inputs</h2>
+    <p class="lead">Enter your biomarker values in the listed units. CRP is entered as raw mg/L and
+      log-transformed (log(CRP+1)) automatically.</p>
+
+    <div class="mb-3">
+      <label class="fw-semibold d-block mb-2" style="color:var(--primary);">Reference cohort <span class="text-muted fw-normal" style="font-size:0.85rem;">(for relative z-score &amp; percentile)</span></label>
+      <select id="cohortSelect" class="form-select">
         <option value="UKB">UK Biobank</option>
         <option value="NHANES">NHANES</option>
         <option value="CHARLS">CHARLS</option>
@@ -54,78 +165,72 @@ body { background:linear-gradient(rgba(255,255,255,0.92),rgba(255,255,255,0.92))
         <option value="RuLAS">RuLAS</option>
       </select>
     </div>
-    <div class="input-grid" id="inputContainer"></div>
-    <button type="submit" class="btn btn-primary w-100 py-2"
-            style="background:var(--secondary); border:none; padding:1rem;">
-      Calculate
-    </button>
-  </form>
 
-  <div id="resultSection">
-    <h4 class="text-center mb-3" style="color:var(--primary);">Result</h4>
-    <div class="row g-3 justify-content-center">
-      <div class="col-md-6">
-        <div class="metric-box text-center">
-          <div class="text-muted small">DISCO</div>
-          <div class="h2 mb-1" style="color:var(--primary);" id="discoResult">--</div>
-          <div id="riskBadge"></div>
+    <form id="discoForm">
+      <div id="inputContainer"></div>
+      <button type="submit" class="btn-calc">Calculate DISCO &amp; DM</button>
+    </form>
+
+    <div id="resultSection">
+      <div class="row g-3 justify-content-center">
+        <div class="col-md-6">
+          <div class="metric-box">
+            <div class="m-label">DISCO</div>
+            <div class="m-value" id="discoResult">--</div>
+            <div id="riskBadge"></div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="metric-box">
+            <div class="m-label">Mahalanobis distance</div>
+            <div class="m-value dm" id="dmResult">--</div>
+            <div class="text-muted" style="font-size:0.82rem;">log DM &nbsp;·&nbsp; raw DM: <span id="dmRawResult">--</span></div>
+          </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="metric-box text-center">
-          <div class="text-muted small">Mahalanobis distance (log DM)</div>
-          <div class="h2 mb-1" style="color:var(--secondary);" id="dmResult">--</div>
-          <div class="text-muted small">raw DM: <span id="dmRawResult">--</span></div>
+      <div class="z-row">
+        <div class="z-cell">
+          <div class="z-label">z-score (cohort-adjusted)</div>
+          <div class="z-value" id="zResult">--</div>
+        </div>
+        <div class="z-cell">
+          <div class="z-label">percentile</div>
+          <div class="z-value" id="pctResult">--</div>
         </div>
       </div>
+      <p class="text-muted mt-3 mb-0 small text-center" id="zNote"></p>
     </div>
-    <hr class="my-3">
-    <div class="row justify-content-center">
-      <div class="col-auto text-center px-4">
-        <div class="text-muted small">z-score (cohort-adjusted)</div>
-        <div class="h3 mb-0" style="color:var(--secondary);" id="zResult">--</div>
-      </div>
-      <div class="col-auto text-center px-4">
-        <div class="text-muted small">percentile</div>
-        <div class="h3 mb-0" style="color:var(--secondary);" id="pctResult">--</div>
-      </div>
-    </div>
-    <p class="text-muted mt-3 mb-0 small" id="zNote"></p>
   </div>
 
-  <div class="notes">
+  <div class="note">
     <strong>How values are estimated.</strong> Both DISCO and DM are computed from a
     <em>standard reference matrix</em> of aggregate statistics (mean vector, covariance / cross-product
-    matrix, and age weights). No individual-level reference data is stored or required — you only need
-    your own biomarker values.<br><br>
-    <span class="formula">
-      $$\mathrm{DISCO}_i = \log\Bigg[ n_{\mathrm{ref}}^{2} \sum_{j \neq k} w_{jk} \Big( \rho_{jk}^{\mathrm{ref}} - \rho_{jk}^{\mathrm{ref}+i} \Big)^{2} \Bigg]$$
-    </span>
-    <span class="formula">
-      $$\mathrm{DM}_i = \log\Bigg[ \sqrt{ (x_i - \mu)^{\top} \Sigma^{-1} (x_i - \mu) } \Bigg]$$
-    </span><br>
-    <strong>Inputs:</strong> enter biomarkers in the listed units. CRP is entered as raw mg/L and
-    log-transformed (log(CRP+1)) automatically.<br><br>
+    matrix, and age weights). No individual-level reference data is stored or required; you only need
+    your own biomarker values.
+    <span class="math">$$\mathrm{DISCO}_i = \log\Bigg[ n_{\mathrm{ref}}^{2} \sum_{j \neq k} w_{jk} \Big( \rho_{jk}^{\mathrm{ref}} - \rho_{jk}^{\mathrm{ref}+i} \Big)^{2} \Bigg]$$</span>
+    <span class="math">$$\mathrm{DM}_i = \log\Bigg[ \sqrt{ (x_i - \mu)^{\top} \Sigma^{-1} (x_i - \mu) } \Bigg]$$</span>
     <strong>Interpretation:</strong> higher DISCO / DM = greater homeostatic dysregulation. Because
     absolute values are cohort-specific (population structure + assay calibration), we also report a
     cohort-adjusted z-score and percentile relative to the selected reference cohort.
   </div>
-</div>
 
-<div class="references">
-  <h2>Abbreviations &amp; References</h2>
-  <ol>
-    <li>CRP: C-reactive protein; GLU: glucose; CHOL: total cholesterol; HDL: high-density lipoprotein cholesterol;
-        CREA: creatinine; UA: uric acid; WBC: white blood cell count; UREA: blood urea; RBC: red blood cell count;
-        ALB: albumin.</li>
-    <li>DISCO: distance of covariance; DM: Mahalanobis distance; PCC: Pearson correlation coefficient.</li>
-    <li>Hao M, et al. Human aging reflects increases in entropy across organ networks. (manuscript).</li>
-    <li>Cohen AA, et al. A novel statistical approach shows evidence for multi-system physiological
-        dysregulation during aging. Mech Ageing Dev. 2013;134(3-4):110–7.</li>
-    <li>The standard reference matrix contains only aggregate statistics (no individual data) and is freely
-        redistributable.</li>
-    <li>Email: haombio@gmail.com</li>
-  </ol>
+  <div class="references">
+    <h2>Abbreviations &amp; References</h2>
+    <ol>
+      <li>CRP: C-reactive protein; GLU: glucose; CHOL: total cholesterol; HDL: high-density lipoprotein cholesterol;
+          CREA: creatinine; UA: uric acid; WBC: white blood cell count; UREA: blood urea; RBC: red blood cell count;
+          ALB: albumin.</li>
+      <li>DISCO: distance of covariance; DM: Mahalanobis distance; PCC: Pearson correlation coefficient.</li>
+      <li>Hao M, et al. Human aging reflects increases in entropy across organ networks. (manuscript).</li>
+      <li>Cohen AA, et al. A novel statistical approach shows evidence for multi-system physiological
+          dysregulation during aging. Mech Ageing Dev. 2013;134(3-4):110–7.</li>
+      <li>The standard reference matrix contains only aggregate statistics (no individual data) and is freely
+          redistributable.</li>
+      <li>Email: haombio@gmail.com</li>
+    </ol>
+  </div>
+
+  <footer>DISCO Calculator · Distance of Covariance</footer>
 </div>
 
 <script>
