@@ -13,7 +13,7 @@ Live: https://jerryhaom.github.io/DISCO-Calculator/
 ## What it computes
 
 DISCO quantifies how much one person's biomarker profile perturbs the
-correlation structure of a young, healthy reference population:
+correlation structure of a young reference population:
 
 $$
 \mathrm{DISCO}_i = \log\Bigg[ n_{\mathrm{ref}}^{2} \sum_{j \neq k} w_{jk} \Big( \rho_{jk}^{\mathrm{ref}} - \rho_{jk}^{\mathrm{ref}+i} \Big)^{2} \Bigg]
@@ -79,9 +79,13 @@ the cohort hides the previous results until the calculator is run again.
 ## Interpretation
 
 - Higher DISCO / DM = greater homeostatic dysregulation.
-- DISCO and DM always use the same UK Biobank reference matrix. Selecting
-  UK Biobank, NHANES, CHARLS, CLHLS, or RuLAS changes only the DISCO z-score
-  and estimated percentile.
+- The main DISCO and DM results always use all 10 markers and the same UK
+  Biobank reference matrix. Selecting a cohort changes the relative comparison.
+  CHARLS's stored distribution uses 8 markers (excluding RBC/ALB); RuLAS's
+  uses 9 (excluding UREA). Their comparison DISCO is therefore recalculated
+  from the corresponding subset and labeled with its panel size. The other
+  cohorts use the full 10-marker score. Subset matrices retain the original
+  weights without renormalization, matching the reference-distribution source.
 - The DISCO z-score is `(DISCO - cohort mean) / cohort standard deviation`.
   It describes standing relative to the selected cohort, without adjusting
   for the individual's age or sex.
@@ -97,27 +101,75 @@ the cohort hides the previous results until the calculator is run again.
 
 ## Parameter provenance and validation
 
-`STANDARD_REF` and `COHORT_STATS` are bundled in `index.html`. This repository
-does not currently include the underlying data or the parameter export scripts.
-The cohort statistics must correspond to exactly the same 10 markers,
-transformations, reference matrix, weight normalization, and log-score scale
-used here. Their provenance and external calibration cannot be established
-from this repository alone. A parameter export script and versioned validation
-results are needed to substantiate predictive-performance claims or clinical
-cutoffs; no such cutoffs are used by the interface.
+`STANDARD_REF` and `COHORT_STATS` are bundled in `index.html`. The local source
+analyses are `19_rebuild_logcrp_plus1.R` (reference) and
+`21_disco_zscore_percentiles.R` (cohort distributions). The latter's exported
+means, SDs and quantile knots match the bundled values, and confirm the 10/8/9
+panel sizes. The distributions use all participants with a finite score,
+whereas the mortality analyses below additionally require complete covariates
+and valid survival outcomes. These are different analysis samples.
+
+The original parameter-export scripts and participant data are not included
+in this repository. The new aggregate evidence and its reconstruction script
+make the mortality estimates auditable, but do not establish clinical cutoffs,
+absolute risk calibration, or held-out predictive performance.
+
+## Biomarker coverage and mortality evidence
+
+The page includes an accessible 10-by-5 availability heatmap and separate
+DISCO/DM mortality results. UKB, NHANES and CLHLS use 10 markers; CHARLS uses
+8; RuLAS wave 2 uses 9. Coverage is specific to the analyzed waves, not every
+wave of each cohort. The accompanying aggregate results are in
+[`data/cohort-evidence.json`](data/cohort-evidence.json).
+
+- Separate Cox models use the same complete-case participants for DISCO and
+  untransformed DM within each cohort. HRs are per 1 SD in that analysis sample.
+- All models include age, sex, BMI, education, smoking and alcohol use; UKB and
+  NHANES additionally include ethnicity/race, and UKB includes physical activity.
+  Age and BMI are continuous; other covariates are categorical.
+- C-index means Harrell's C for the **full score + covariates model**, fitted
+  and evaluated in the same cohort. It is apparent performance, without
+  optimism correction. These are not stand-alone biomarker C-indices or
+  held-out validation of one fixed mortality model.
+- Models use Efron ties and 95% Wald confidence intervals. NHANES is unweighted;
+  survey-design inference is not implemented. No additional biomarker
+  imputation is performed on the supplied cleaned inputs.
+- Score-specific proportional-hazards tests detect departures for UKB DISCO
+  and DM, NHANES DISCO and CHARLS DISCO. Their fitted HRs should not be read as
+  time-constant effects; time-varying sensitivity analyses remain necessary.
+  Test p-values are included in the JSON.
+
+To regenerate with authorized access to the original controlled data, install
+R packages `survival`, `jsonlite`, and `openxlsx`, then run:
+
+```sh
+export DISCO_DATA_ROOT=/path/to/controlled/DISCO
+export DISCO_RULAS_QUESTIONNAIRE=/path/to/controlled/wave2.xlsx
+Rscript scripts/rebuild-cohort-evidence.R
+python3 scripts/render-cohort-evidence.py
+```
+
+The R script checks join-key uniqueness, reconstructs unit conversions,
+excludes invalid outcomes (including CLHLS lost-to-follow-up codes), and checks
+vectorized DISCO against literal matrix updates. Detailed variable mappings
+and covariate recodes are in that script. Only aggregate JSON is written;
+the controlled source files must remain outside this repository. The Python
+renderer embeds the tables in HTML so they also work when opened as a local file.
 
 ## Checks
 
 Run the dependency-free regression checks with Node.js 18 or newer:
 
 ```sh
-node --test tests/calculator.test.cjs
+node --test tests/*.test.cjs
+python3 scripts/render-cohort-evidence.py --check
 ```
 
 The checks cover fixed score examples, percentile knots and tails for all five
 cohorts, interpolation and ordinal formatting, invalid input and overflow
-handling, and result invalidation after edits. They verify implementation
-behavior, not clinical validity or the source of the bundled parameters.
+handling, result invalidation after edits, panel-matched cohort comparisons,
+and aggregate evidence integrity. They verify implementation behavior, not
+clinical validity.
 
 ## References
 

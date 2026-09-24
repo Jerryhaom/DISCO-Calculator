@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-09-24T10:32:47Z",
+  "analysis": {
+    "outcome": "All-cause mortality",
+    "model": "Cox proportional hazards, Efron ties",
+    "hr_scale": "Per 1 SD within the complete-case analysis sample",
+    "disco_scale": "Natural log DISCO",
+    "dm_scale": "Untransformed Mahalanobis distance",
+    "c_index": "Harrell concordance of the full adjusted model; apparent in-sample estimate",
+    "confidence_intervals": "95% Wald intervals; C-index bounds truncated to [0,1]",
+    "sampling_weights": "Unweighted; survey design not modeled",
+    "missing_data": "Complete cases using supplied cleaned biomarker inputs; no additional imputation. Valid binary mortality status and positive follow-up required.",
+    "reference": "Fixed UK Biobank standard matrix embedded in index.html; subset matrices for 8/9-marker panels, without re-normalizing weights.",
+    "covariate_policy": "Age, sex, BMI, education, smoking and alcohol in all cohorts; ethnicity/race in UKB and NHANES; physical activity in UKB.",
+    "source_notes": "Availability is specific to these analyzed waves and source files; it is not a claim about all waves of a cohort."
+  },
+  "markers": ["CRP", "GLU", "CHOL", "HDL", "CREA", "UA", "WBC", "UREA", "RBC", "ALB"],
+  "cohorts": [
+    {
+      "cohort": "UKB",
+      "label": "UK Biobank",
+      "wave": "Baseline 2006–2010",
+      "markers": ["CRP", "GLU", "CHOL", "HDL", "CREA", "UA", "WBC", "UREA", "RBC", "ALB"],
+      "marker_count": 10,
+      "n": 371644,
+      "events": 30193,
+      "covariates": ["age", "sex", "bmi", "race", "education", "smoking", "alcohol", "physical_activity"],
+      "selection": {
+        "source_n": 487517,
+        "invalid_outcome_n": 11,
+        "invalid_score_n": 0,
+        "complete_case_n": 371644
+      },
+      "estimates": {
+        "DISCO": {
+          "hr": 1.271787644526,
+          "hr_low": 1.257506846481,
+          "hr_high": 1.286230621563,
+          "c_index": 0.7480896075577,
+          "c_low": 0.7453737120771,
+          "c_high": 0.7508055030383,
+          "score_sd": 1.630371310914,
+          "ph_test_p": 8.719995009919e-07
+        },
+        "DM": {
+          "hr": 1.06519021023,
+          "hr_low": 1.063007969609,
+          "hr_high": 1.067376930756,
+          "c_index": 0.7465982675072,
+          "c_low": 0.7438826664159,
+          "c_high": 0.7493138685986,
+          "score_sd": 1.671778493162,
+          "ph_test_p": 1.658152278873e-16
+        }
+      }
+    },
+    {
+      "cohort": "NHANES",
+      "label": "NHANES",
+      "wave": "Harmonized NHANES4 sample",
+      "markers": ["CRP", "GLU", "CHOL", "HDL", "CREA", "UA", "WBC", "UREA", "RBC", "ALB"],
+      "marker_count": 10,
+      "n": 27102,
+      "events": 4776,
+      "covariates": ["age", "sex", "bmi", "race", "education", "smoking", "alcohol"],
+      "selection": {
+        "source_n": 54945,
+        "invalid_outcome_n": 7,
+        "invalid_score_n": 17318,
+        "complete_case_n": 27102
+      },
+      "estimates": {
+        "DISCO": {
+          "hr": 1.444018496625,
+          "hr_low": 1.402979676296,
+          "hr_high": 1.486257751146,
+          "c_index": 0.8679043992732,
+          "c_low": 0.8630633264782,
+          "c_high": 0.8727454720681,
+          "score_sd": 1.556921002179,
+          "ph_test_p": 1.736909028843e-05
+        },
+        "DM": {
+          "hr": 1.340966069889,
+          "hr_low": 1.312756245805,
+          "hr_high": 1.369782094992,
+          "c_index": 0.8676384918756,
+          "c_low": 0.8627741623563,
+          "c_high": 0.8725028213948,
+          "score_sd": 1.720515061355,
+          "ph_test_p": 0.09138584299446
+        }
+      }
+    },
+    {
+      "cohort": "CHARLS",
+      "label": "CHARLS",
+      "wave": "Baseline 2011",
+      "markers": ["CRP", "GLU", "CHOL", "HDL", "CREA", "UA", "WBC", "UREA"],
+      "marker_count": 8,
+      "n": 9200,
+      "events": 806,
+      "covariates": ["age", "sex", "bmi", "education", "smoking", "alcohol"],
+      "selection": {
+        "source_n": 11601,
+        "invalid_outcome_n": 0,
+        "invalid_score_n": 494,
+        "complete_case_n": 9200
+      },
+      "estimates": {
+        "DISCO": {
+          "hr": 1.290402688999,
+          "hr_low": 1.208232705312,
+          "hr_high": 1.378160922523,
+          "c_index": 0.7776737720977,
+          "c_low": 0.7612234962157,
+          "c_high": 0.7941240479797,
+          "score_sd": 1.600274628145,
+          "ph_test_p": 0.01195544009194
+        },
+        "DM": {
+          "hr": 1.141047581465,
+          "hr_low": 1.112433517032,
+          "hr_high": 1.170397658136,
+          "c_index": 0.7776246121648,
+          "c_low": 0.7610859269066,
+          "c_high": 0.794163297423,
+          "score_sd": 2.353126692601,
+          "ph_test_p": 0.426928110775
+        }
+      }
+    },
+    {
+      "cohort": "CLHLS",
+      "label": "CLHLS",
+      "wave": "Biomarker wave 2014; follow-up to 2018",
+      "markers": ["CRP", "GLU", "CHOL", "HDL", "CREA", "UA", "WBC", "UREA", "RBC", "ALB"],
+      "marker_count": 10,
+      "n": 1819,
+      "events": 594,
+      "covariates": ["age", "sex", "bmi", "education", "smoking", "alcohol"],
+      "selection": {
+        "source_n": 2546,
+        "invalid_outcome_n": 344,
+        "invalid_score_n": 65,
+        "complete_case_n": 1819
+      },
+      "estimates": {
+        "DISCO": {
+          "hr": 1.348325790713,
+          "hr_low": 1.238353742848,
+          "hr_high": 1.468063910173,
+          "c_index": 0.757653769181,
+          "c_low": 0.7399591406346,
+          "c_high": 0.7753483977273,
+          "score_sd": 1.703813670882,
+          "ph_test_p": 0.07643417873329
+        },
+        "DM": {
+          "hr": 1.228586355999,
+          "hr_low": 1.16801275846,
+          "hr_high": 1.292301323949,
+          "c_index": 0.7571337032082,
+          "c_low": 0.739329093198,
+          "c_high": 0.7749383132183,
+          "score_sd": 2.504566875803,
+          "ph_test_p": 0.3212018852267
+        }
+      }
+    },
+    {
+      "cohort": "RuLAS",
+      "label": "RuLAS",
+      "wave": "Wave 2, 2016",
+      "markers": ["CRP", "GLU", "CHOL", "HDL", "CREA", "UA", "WBC", "RBC", "ALB"],
+      "marker_count": 9,
+      "n": 1661,
+      "events": 175,
+      "covariates": ["age", "sex", "bmi", "education", "smoking", "alcohol"],
+      "selection": {
+        "source_n": 1823,
+        "invalid_outcome_n": 0,
+        "invalid_score_n": 45,
+        "complete_case_n": 1661
+      },
+      "estimates": {
+        "DISCO": {
+          "hr": 1.399609875661,
+          "hr_low": 1.22072491589,
+          "hr_high": 1.604708627267,
+          "c_index": 0.6816382659818,
+          "c_low": 0.6417160576537,
+          "c_high": 0.7215604743098,
+          "score_sd": 1.483219872784,
+          "ph_test_p": 0.6716875754703
+        },
+        "DM": {
+          "hr": 1.146089002751,
+          "hr_low": 1.068985337816,
+          "hr_high": 1.228753992933,
+          "c_index": 0.6757883554767,
+          "c_low": 0.6354108638426,
+          "c_high": 0.7161658471107,
+          "score_sd": 2.291740721804,
+          "ph_test_p": 0.8644842257768
+        }
+      }
+    }
+  ],
+  "sources": {
+    "controlled_data_files": ["Result1/Clean.UKB.Clinical.rds", "UKB_Data/extended_covariates_clinical.rds", "UKB_Data/covariates_raw_full.rds", "UKB_Data/ukb_race_21000.csv", "Package/DISCO4HD/data/NHANES4.rda", "UKB_Data/NHANES_covariates.rds", "Result4/CHARLS.DISCO.rds", "Result4/CHARLS/Blood_Biomarkers.txt", "Result4/CHARLS/CKM.Charls.stat2011.csv", "Result4/CLHLS/New/biomarker_dataset_CLHLS_2014-1.tab.csv", "Result4/CLHLS.DISCO.rds", "Result4/CLHLS/New/CLHLS.2014_2018.longitudinal.datasets.rds", "Result4/RuLAS.DISCO.rds", "Result4/Rugao/2016Rugao.data.x.csv"],
+    "rulas_questionnaire": "Wave 2 questionnaire, Sheet2: A61, J1, K1",
+    "upstream_methods": ["19_rebuild_logcrp_plus1.R", "01_covariate_models.R", "06_crosscohort_covariates.R", "run_DISCO_DM_table.R"],
+    "software": {
+      "R": "4.5.3",
+      "survival": "3.8.6"
+    }
+  }
+}

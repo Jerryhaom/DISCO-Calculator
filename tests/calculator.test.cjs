@@ -11,6 +11,11 @@ const examples = [
   { values: [8, 7, 6, 0.8, 130, 480, 12, 9, 3.4, 30], disco: 4.921159259470046, raw: 10.030433484658058 },
   { values: [0, 3.9, 3.6, 1.6, 60, 200, 4, 2.5, 4, 50], disco: 1.4551748543547456, raw: 3.9506639677639126 }
 ];
+// Independent R rank-one covariance calculations, using the published matrices.
+const subsetScores = {
+  CHARLS: [-4.7177596820757026, 3.2975198908337378, 0.85220305782945438],
+  RuLAS: [-2.3242376471311776, 4.054018365019223, 0.30870613426190235]
+};
 const close = (actual, expected, tolerance = 1e-11) => assert.ok(Math.abs(actual - expected) < tolerance, `${actual} != ${expected}`);
 
 function calculator() {
@@ -32,7 +37,7 @@ function calculator() {
   }
   const context = vm.createContext({ document: { getElementById } });
   vm.runInContext(script, context);
-  const api = vm.runInContext('({ MARKERS, COHORT_STATS, referenceMean: STANDARD_REF.mu, zVector, computeDisco, computeDM, estimatePercentile, percentileLabel, ordinal })', context);
+  const api = vm.runInContext('({ MARKERS, COHORT_STATS, COHORT_PANELS, referenceMean: STANDARD_REF.mu, zVector, computeDisco, computeDM, estimatePercentile, percentileLabel, ordinal })', context);
   function fill(values = examples[0].values, cohort = 'UKB') {
     api.MARKERS.forEach((m, i) => { getElementById('in_' + m).value = String(values[i]); });
     getElementById('cohortSelect').value = cohort;
@@ -42,9 +47,9 @@ function calculator() {
   return { ...api, node: getElementById, fill, submit };
 }
 
-test('fixed examples report untransformed DM and preserve DISCO and cohort z-scores', () => {
+test('fixed examples preserve full-panel scores and match cohort distributions to their panels', () => {
   const c = calculator();
-  for (const example of examples) {
+  for (const [index, example] of examples.entries()) {
     const z = c.zVector(example.values);
     const dm = c.computeDM(z);
     close(c.computeDisco(z), example.disco);
@@ -54,7 +59,10 @@ test('fixed examples report untransformed DM and preserve DISCO and cohort z-sco
       c.submit();
       assert.equal(c.node('discoResult').textContent, example.disco.toFixed(3));
       assert.equal(c.node('dmResult').textContent, example.raw.toFixed(3));
-      assert.equal(c.node('zResult').textContent, ((example.disco - stats.mean) / stats.sd).toFixed(2));
+      const comparison = subsetScores[cohort]?.[index] ?? example.disco;
+      close(c.computeDisco(z, c.COHORT_PANELS[cohort]), comparison);
+      assert.equal(c.node('zResult').textContent, ((comparison - stats.mean) / stats.sd).toFixed(2));
+      assert.ok(c.node('zLabel').textContent.includes(`${c.COHORT_PANELS[cohort].length} markers`));
       assert.equal(c.node('resultSection').classList.contains('show'), true);
       assert.equal(c.node('formError').hidden, true);
     }
@@ -138,12 +146,12 @@ test('input and cohort edits invalidate results; a corrected submission recovers
   assert.equal(c.node('resultSection').classList.contains('show'), true);
 });
 
-test('comparison label follows the selected cohort mean, not fixed clinical cutoffs', () => {
+test('comparison label follows the corresponding panel score and cohort mean', () => {
   const c = calculator();
   const values = [1, 5, 4.5, 1.3, 80, 300, 6, 5, 4.8, 35];
-  const disco = c.computeDisco(c.zVector(values));
   const seen = new Set();
   for (const [cohort, stats] of Object.entries(c.COHORT_STATS)) {
+    const disco = c.computeDisco(c.zVector(values), c.COHORT_PANELS[cohort]);
     c.fill(values, cohort); c.submit();
     const expected = disco < stats.mean ? 'Below cohort mean' : disco > stats.mean ? 'Above cohort mean' : 'At cohort mean';
     assert.equal(c.node('cohortComparison').textContent, expected);
@@ -155,4 +163,17 @@ test('comparison label follows the selected cohort mean, not fixed clinical cuto
 test('DM at the reference mean is zero and finite without a logarithm', () => {
   const c = calculator();
   assert.equal(c.computeDM(c.referenceMean), 0);
+});
+
+test('excluded markers cannot change CHARLS or RuLAS relative estimates', () => {
+  const c = calculator();
+  for (const [cohort, excluded] of [['CHARLS', ['RBC', 'ALB']], ['RuLAS', ['UREA']]]) {
+    c.fill(examples[0].values, cohort); c.submit();
+    const initial = ['zResult', 'pctResult', 'cohortComparison', 'zNote'].map(id => c.node(id).textContent);
+    const full = c.node('discoResult').textContent;
+    for (const marker of excluded) c.node('in_' + marker).value = '20';
+    c.submit();
+    assert.deepEqual(['zResult', 'pctResult', 'cohortComparison', 'zNote'].map(id => c.node(id).textContent), initial);
+    assert.notEqual(c.node('discoResult').textContent, full);
+  }
 });

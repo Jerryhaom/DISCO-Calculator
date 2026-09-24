@@ -87,6 +87,13 @@ footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid 
 @media(max-width:480px){.support-card{padding:20px 16px}.abbreviations dl{grid-template-columns:1fr}}
 @media(max-width:480px){.wrap{padding:16px 12px}.brandbar{font-size:9px;margin-bottom:18px}.header{padding:25px 22px;border-radius:16px}.header .sub{font-size:12px}.chip{font-size:9px}.card,#resultSection{padding:20px 16px;border-radius:14px}.input-grid{gap:16px 12px}.input-group label{display:block;font-size:11px;min-height:37px}.marker-code{display:block;font-size:9px}.input-group input{padding-left:8px;padding-right:65px}.input-unit{right:20px;font-size:9px}.reference-range{font-size:9px}.metrics-grid{grid-template-columns:1fr}.note{padding:20px 16px}.brandbar>span{max-width:110px;text-align:right}footer{flex-direction:column;gap:3px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+
+.cohort-evidence{margin-top:24px;padding:28px;background:#fff;border:1px solid var(--line);border-radius:18px;min-width:0}
+.evidence-header{display:flex;justify-content:space-between;align-items:start;gap:20px;margin-bottom:20px}.evidence-header .eyebrow{color:var(--secondary);margin-bottom:6px}.evidence-header h2{font-size:20px}.evidence-header p{font-size:12px;color:var(--muted);margin:8px 0 0;max-width:690px}
+.evidence-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:11px;margin-bottom:14px}.legend-item{display:inline-flex;align-items:center;gap:6px}.legend-square{width:12px;height:12px;border-radius:3px;background:#087e83}.legend-square.unavailable{background:#edf0f1;border:1px solid #d9e1e3}
+.table-scroll{overflow-x:auto;max-width:100%;border:1px solid var(--line);border-radius:10px}.evidence-table{border-collapse:separate;border-spacing:0;width:100%;font-size:12px}.evidence-table th,.evidence-table td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:middle}.evidence-table thead th{font-size:10px;color:var(--muted);background:#f6f9f9;font-weight:650;white-space:nowrap}.evidence-table tbody th{text-align:left;color:var(--primary);font-weight:650;background:white}.evidence-table tr:last-child>*{border-bottom:0}.evidence-table .row-subtitle{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:3px}.availability-table{min-width:650px}.availability-table th:first-child{min-width:150px}.availability-table td{text-align:center;width:16%;padding:5px}.heat-cell{display:flex;align-items:center;justify-content:center;min-height:32px;border-radius:5px;background:#087e83;color:#fff;font-size:13px;font-weight:650}.heat-cell.unavailable{background:#edf0f1;color:#7b8b91}.availability-table tbody th{font-size:11px}.availability-table tbody th,.performance-table tbody th{position:sticky;left:0;z-index:1}.availability-table thead th{text-align:center}.availability-table thead th:first-child{text-align:left}
+.evidence-footnote{font-size:11px;color:var(--muted);line-height:1.8;margin:12px 0 0}.performance-heading{margin:28px 0 12px;font-size:15px;color:var(--primary)}.performance-table{min-width:850px;font-variant-numeric:tabular-nums}.performance-table td{text-align:center;white-space:nowrap}.performance-table thead th{text-align:center}.performance-table thead th:first-child{text-align:left}.performance-table .metric-group{color:var(--secondary);background:#edf6f4;font-size:11px}.performance-table td .ci{display:block;font-size:10px;color:var(--muted);margin-top:3px}.evidence-methods{font-size:11px;color:var(--muted);margin-top:18px;border-top:1px solid var(--line);padding-top:14px}.evidence-methods summary{font-weight:650;color:var(--primary);cursor:pointer}.evidence-methods p{margin:10px 0 0}
+@media(max-width:480px){.cohort-evidence{padding:20px 16px}.evidence-header h2{font-size:18px}.evidence-table th,.evidence-table td{padding:10px 12px}.availability-table td{padding:4px}}
 </style>
 </head>
 <body>
@@ -139,14 +146,13 @@ footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid 
       <div class="metrics-grid">
         <div class="metric-column">
           <div class="metric-box primary-metric">
-            <div class="m-label">DISCO · natural log</div>
+            <div class="m-label">DISCO · 10 markers · natural log</div>
             <div class="m-value" id="discoResult">--</div>
-            <div id="cohortComparison" class="comparison-badge"></div>
           </div>
         </div>
         <div class="metric-column">
           <div class="metric-box">
-            <div class="m-label">Mahalanobis distance</div>
+            <div class="m-label">Mahalanobis distance · 10 markers</div>
             <div class="m-value dm" id="dmResult">--</div>
             <div class="text-muted" style="font-size:0.82rem;">Distance from the reference mean</div>
           </div>
@@ -154,17 +160,18 @@ footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid 
       </div>
       <div class="z-row">
         <div class="z-cell">
-          <div class="z-label">DISCO z-score (cohort-relative)</div>
+          <div class="z-label" id="zLabel">DISCO z-score (cohort-relative)</div>
           <div class="z-value" id="zResult">--</div>
         </div>
         <div class="z-cell">
-          <div class="z-label">estimated DISCO percentile</div>
+          <div class="z-label" id="pctLabel">Estimated DISCO percentile</div>
           <div class="z-value" id="pctResult">--</div>
         </div>
       </div>
+      <div id="cohortComparison" class="comparison-badge"></div>
       <p class="text-muted mt-3 mb-0 small text-center" id="zNote"></p>
       </div>
-      <p class="result-footnote">DISCO and DM use the same UK Biobank matrix for every cohort. The selected cohort changes only the DISCO z-score and estimated percentile. These comparisons are not age-adjusted or clinical risk categories. Recalculate after changing your inputs or cohort.</p>
+      <p class="result-footnote">The two scores above always use all 10 markers and the UK Biobank matrix. Relative comparisons match the selected cohort's panel: 8 markers for CHARLS, 9 for RuLAS, and 10 for the others. These comparisons are not age-adjusted or clinical risk categories. Recalculate after changing your inputs or cohort.</p>
     </section>
   </div>
 
@@ -184,10 +191,49 @@ footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid 
     (DISCO − cohort mean) / cohort standard deviation. We interpolate between seven stored percentile
     thresholds (5, 10, 25, 50, 75, 90 and 95). Values outside those thresholds are reported as below
     the 5th or above the 95th percentile; their exact tail rank is unknown.
+    For CHARLS and RuLAS, the comparison score is recalculated from the corresponding 8- or
+    9-marker subset to match the stored reference distribution; the full 10-marker scores remain above.
     <br><strong>Interpretation:</strong> higher DISCO / DM indicates greater homeostatic dysregulation
     relative to the reference matrix. The cohort comparison describes relative standing, without
     adjusting for individual age or sex or estimating disease probability.
   </div>
+
+  <section class="cohort-evidence" aria-labelledby="evidenceHeading">
+    <div class="evidence-header"><div><div class="eyebrow">Cohort evidence</div><h2 id="evidenceHeading">Biomarker coverage &amp; mortality prediction</h2><p>Availability of the calculator's 10 biomarkers in the analyzed cohort waves. Performance uses each cohort's available panel and the fixed UK Biobank reference matrix.</p></div></div>
+    <div class="evidence-legend"><span class="legend-item"><span class="legend-square" aria-hidden="true"></span>Available</span><span class="legend-item"><span class="legend-square unavailable" aria-hidden="true"></span>Unavailable in analyzed wave</span></div>
+    <div class="table-scroll" role="region" aria-label="Biomarker availability by cohort" tabindex="0"><table class="evidence-table availability-table"><thead><tr><th scope="col">Biomarker</th><th scope="col">UK Biobank<span class="row-subtitle">10 / 10 markers</span></th><th scope="col">NHANES<span class="row-subtitle">10 / 10 markers</span></th><th scope="col">CHARLS<span class="row-subtitle">8 / 10 markers</span></th><th scope="col">CLHLS<span class="row-subtitle">10 / 10 markers</span></th><th scope="col">RuLAS<span class="row-subtitle">9 / 10 markers</span></th></tr></thead><tbody>
+      <tr><th scope="row">CRP</th><td><span class="heat-cell" aria-label="Available" title="UK Biobank · CRP: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="NHANES · CRP: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CHARLS · CRP: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CLHLS · CRP: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="RuLAS · CRP: Available">✓</span></td></tr>
+<tr><th scope="row">GLU</th><td><span class="heat-cell" aria-label="Available" title="UK Biobank · GLU: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="NHANES · GLU: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CHARLS · GLU: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CLHLS · GLU: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="RuLAS · GLU: Available">✓</span></td></tr>
+<tr><th scope="row">CHOL</th><td><span class="heat-cell" aria-label="Available" title="UK Biobank · CHOL: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="NHANES · CHOL: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CHARLS · CHOL: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CLHLS · CHOL: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="RuLAS · CHOL: Available">✓</span></td></tr>
+<tr><th scope="row">HDL</th><td><span class="heat-cell" aria-label="Available" title="UK Biobank · HDL: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="NHANES · HDL: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CHARLS · HDL: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CLHLS · HDL: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="RuLAS · HDL: Available">✓</span></td></tr>
+<tr><th scope="row">CREA</th><td><span class="heat-cell" aria-label="Available" title="UK Biobank · CREA: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="NHANES · CREA: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CHARLS · CREA: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CLHLS · CREA: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="RuLAS · CREA: Available">✓</span></td></tr>
+<tr><th scope="row">UA</th><td><span class="heat-cell" aria-label="Available" title="UK Biobank · UA: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="NHANES · UA: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CHARLS · UA: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CLHLS · UA: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="RuLAS · UA: Available">✓</span></td></tr>
+<tr><th scope="row">WBC</th><td><span class="heat-cell" aria-label="Available" title="UK Biobank · WBC: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="NHANES · WBC: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CHARLS · WBC: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CLHLS · WBC: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="RuLAS · WBC: Available">✓</span></td></tr>
+<tr><th scope="row">UREA</th><td><span class="heat-cell" aria-label="Available" title="UK Biobank · UREA: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="NHANES · UREA: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CHARLS · UREA: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="CLHLS · UREA: Available">✓</span></td><td><span class="heat-cell unavailable" aria-label="Unavailable in analyzed wave" title="RuLAS · UREA: Unavailable in analyzed wave">—</span></td></tr>
+<tr><th scope="row">RBC</th><td><span class="heat-cell" aria-label="Available" title="UK Biobank · RBC: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="NHANES · RBC: Available">✓</span></td><td><span class="heat-cell unavailable" aria-label="Unavailable in analyzed wave" title="CHARLS · RBC: Unavailable in analyzed wave">—</span></td><td><span class="heat-cell" aria-label="Available" title="CLHLS · RBC: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="RuLAS · RBC: Available">✓</span></td></tr>
+<tr><th scope="row">ALB</th><td><span class="heat-cell" aria-label="Available" title="UK Biobank · ALB: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="NHANES · ALB: Available">✓</span></td><td><span class="heat-cell unavailable" aria-label="Unavailable in analyzed wave" title="CHARLS · ALB: Unavailable in analyzed wave">—</span></td><td><span class="heat-cell" aria-label="Available" title="CLHLS · ALB: Available">✓</span></td><td><span class="heat-cell" aria-label="Available" title="RuLAS · ALB: Available">✓</span></td></tr>
+    </tbody></table></div>
+    <p class="evidence-footnote">CHARLS lacks RBC and albumin in the analyzed panel; RuLAS wave 2 lacks urea. Their results use 8- and 9-marker subsets, respectively. “Available” describes cohort-level collection, not complete observations for every participant. CLHLS uses hs-CRP. Tables scroll horizontally on small screens.</p>
+    <h3 class="performance-heading">All-cause mortality · Fully adjusted models</h3>
+    <div class="table-scroll" role="region" aria-label="Mortality prediction performance" tabindex="0"><table class="evidence-table performance-table"><thead><tr><th rowspan="2" scope="col">Cohort / panel</th><th rowspan="2" scope="col">Participants / deaths</th><th colspan="2" class="metric-group" scope="colgroup">DISCO</th><th colspan="2" class="metric-group" scope="colgroup">DM</th></tr><tr><th scope="col">C-index (95% CI)</th><th scope="col">HR per SD (95% CI)</th><th scope="col">C-index (95% CI)</th><th scope="col">HR per SD (95% CI)</th></tr></thead><tbody id="performanceRows">
+      <tr data-cohort="UKB"><th scope="row">UK Biobank<span class="row-subtitle">10 markers</span></th><td>371,644<span class="ci">30,193 deaths</span></td><td data-metric="DISCO" data-estimate="c_index">0.748<span class="ci">(0.745–0.751)</span></td><td data-metric="DISCO" data-estimate="hr">1.27<span class="ci">(1.26–1.29)</span></td><td data-metric="DM" data-estimate="c_index">0.747<span class="ci">(0.744–0.749)</span></td><td data-metric="DM" data-estimate="hr">1.07<span class="ci">(1.06–1.07)</span></td></tr>
+<tr data-cohort="NHANES"><th scope="row">NHANES<span class="row-subtitle">10 markers</span></th><td>27,102<span class="ci">4,776 deaths</span></td><td data-metric="DISCO" data-estimate="c_index">0.868<span class="ci">(0.863–0.873)</span></td><td data-metric="DISCO" data-estimate="hr">1.44<span class="ci">(1.40–1.49)</span></td><td data-metric="DM" data-estimate="c_index">0.868<span class="ci">(0.863–0.873)</span></td><td data-metric="DM" data-estimate="hr">1.34<span class="ci">(1.31–1.37)</span></td></tr>
+<tr data-cohort="CHARLS"><th scope="row">CHARLS<span class="row-subtitle">8 markers</span></th><td>9,200<span class="ci">806 deaths</span></td><td data-metric="DISCO" data-estimate="c_index">0.778<span class="ci">(0.761–0.794)</span></td><td data-metric="DISCO" data-estimate="hr">1.29<span class="ci">(1.21–1.38)</span></td><td data-metric="DM" data-estimate="c_index">0.778<span class="ci">(0.761–0.794)</span></td><td data-metric="DM" data-estimate="hr">1.14<span class="ci">(1.11–1.17)</span></td></tr>
+<tr data-cohort="CLHLS"><th scope="row">CLHLS<span class="row-subtitle">10 markers</span></th><td>1,819<span class="ci">594 deaths</span></td><td data-metric="DISCO" data-estimate="c_index">0.758<span class="ci">(0.740–0.775)</span></td><td data-metric="DISCO" data-estimate="hr">1.35<span class="ci">(1.24–1.47)</span></td><td data-metric="DM" data-estimate="c_index">0.757<span class="ci">(0.739–0.775)</span></td><td data-metric="DM" data-estimate="hr">1.23<span class="ci">(1.17–1.29)</span></td></tr>
+<tr data-cohort="RuLAS"><th scope="row">RuLAS<span class="row-subtitle">9 markers</span></th><td>1,661<span class="ci">175 deaths</span></td><td data-metric="DISCO" data-estimate="c_index">0.682<span class="ci">(0.642–0.722)</span></td><td data-metric="DISCO" data-estimate="hr">1.40<span class="ci">(1.22–1.60)</span></td><td data-metric="DM" data-estimate="c_index">0.676<span class="ci">(0.635–0.716)</span></td><td data-metric="DM" data-estimate="hr">1.15<span class="ci">(1.07–1.23)</span></td></tr>
+    </tbody></table></div>
+    <p class="evidence-footnote"><strong>C-index is for the score + covariates model</strong>, fitted and evaluated in the same cohort (apparent performance). HR is per 1 SD within that cohort's analysis sample. DISCO uses its natural-log scale; DM is untransformed. Covariates and panel size vary by cohort, so these estimates are not a direct ranking of cohorts or panels.</p>
+    <p class="evidence-footnote">All models adjust for age, sex, BMI, education, smoking and alcohol use; UKB and NHANES also include ethnicity/race, and UKB includes physical activity. Some score associations vary with follow-up time; their single HR should not be interpreted as constant over time.</p>
+    <details class="evidence-methods"><summary>Analysis methods &amp; cohort-specific covariates</summary><div id="evidenceMethods">
+      <p><strong>Model and samples.</strong> Separate Cox models with Efron ties for DISCO and DM, using identical complete-case participants within each cohort. Only binary mortality status (0/1) and positive follow-up are accepted; lost-to-follow-up codes are excluded. No additional imputation is performed on the supplied cleaned biomarker inputs. Age and BMI are continuous; other covariates are categorical. “Fully adjusted” refers to the available adjustment set listed below, not every potential confounder.</p>
+      <ul><li><strong>UK Biobank:</strong> age, sex, BMI, ethnicity/race, education, smoking, alcohol use, physical activity.</li><li><strong>NHANES:</strong> age, sex, BMI, ethnicity/race, education, smoking, alcohol use.</li><li><strong>CHARLS:</strong> age, sex, BMI, education, smoking, alcohol use.</li><li><strong>CLHLS:</strong> age, sex, BMI, education, smoking, alcohol use.</li><li><strong>RuLAS:</strong> age, sex, BMI, education, smoking, alcohol use.</li></ul>
+      <p><strong>Analyzed waves.</strong> UK Biobank: Baseline 2006–2010; NHANES: Harmonized NHANES4 sample; CHARLS: Baseline 2011; CLHLS: Biomarker wave 2014; follow-up to 2018; RuLAS: Wave 2, 2016.</p>
+      <p><strong>Scoring.</strong> Biomarkers are harmonized to the calculator's units, CRP is transformed with ln(CRP + 1), and the fixed UKB reference is applied. CHARLS and RuLAS use matching submatrices with the original weights, without renormalization. Their subset scores are distinct from full 10-marker scores. The calculator's relative z-scores and percentiles also use the matching cohort panel.</p>
+      <p><strong>Estimation.</strong> Harrell's C is calculated from each full model's linear predictor. HR and C-index intervals are 95% Wald intervals; C-index bounds are restricted to [0, 1]. These models are unweighted, including NHANES; its complex survey design is not incorporated. Estimates have not been corrected for optimism or validated as a fixed mortality prediction model in held-out data. The calculator does not produce an absolute mortality risk.</p>
+      <p><strong>Proportional-hazards check.</strong> Score-specific Schoenfeld-residual tests give p &lt; 0.05 for UK Biobank DISCO (p = 8.72e-07); UK Biobank DM (p = 1.66e-16); NHANES DISCO (p = 1.74e-05); CHARLS DISCO (p = 0.012). These results indicate departures from proportional hazards; the displayed HRs summarize the fitted associations and warrant time-varying-effect sensitivity analyses. Other test p-values are in the downloadable results.</p>
+      <p><strong>Provenance.</strong> Recomputed 2026-09-24 using the existing cohort biomarker and survival files and available covariates. <a href="data/cohort-evidence.json" download>Download aggregate results (JSON)</a> · <a href="scripts/rebuild-cohort-evidence.R">Reproduction script</a>. Only aggregate results are published; participant-level inputs remain outside this repository.</p>
+    </div></details>
+  </section>
 
   <div class="support-grid">
     <section class="support-card abbreviations" aria-labelledby="abbreviationsHeading">
@@ -231,6 +277,12 @@ const STANDARD_REF = {"markers":["CRP","GLU","CHOL","HDL","CREA","UA","WBC","URE
 const COHORT_STATS = {"UKB": {"mean": -0.7804, "sd": 1.644, "pct": [null, -1.789, -1.184, -0.55, 0.04, 0.611, 1.153, 1.512]}, "NHANES": {"mean": 0.5484, "sd": 1.5667, "pct": [null, -1.539, -1.216, -0.674, -0.059, 0.615, 1.321, 1.774]}, "CHARLS": {"mean": -0.2586, "sd": 1.6108, "pct": [null, -1.502, -1.194, -0.682, -0.075, 0.604, 1.309, 1.776]}, "CLHLS": {"mean": 1.0735, "sd": 1.7398, "pct": [null, -1.582, -1.248, -0.667, -0.029, 0.626, 1.251, 1.643]}, "RuLAS": {"mean": -0.4307, "sd": 1.4804, "pct": [null, -1.579, -1.2, -0.629, -0.049, 0.568, 1.247, 1.707]}};
 const MARKER_META = {"CRP": ["C-reactive protein", "mg/L", "0\u20135", "auto log(CRP+1)"], "GLU": ["Glucose", "mmol/L", "3.9\u20136.1", ""], "CHOL": ["Total cholesterol", "mmol/L", "3.6\u20135.7", ""], "HDL": ["HDL cholesterol", "mmol/L", "1.0\u20131.6", ""], "CREA": ["Creatinine", "\u03bcmol/L", "60\u2013110", ""], "UA": ["Uric acid (urate)", "\u03bcmol/L", "200\u2013420", ""], "WBC": ["White blood cell count", "10\u2079/L", "4.0\u201310.0", ""], "UREA": ["Urea", "mmol/L", "2.5\u20137.5", ""], "RBC": ["Red blood cell count", "10\u00b9\u00b2/L", "4.0\u20135.5", ""], "ALB": ["Albumin", "g/L", "35\u201350", ""]};
 const MARKERS = STANDARD_REF.markers;
+// These panels match the source of each stored cohort distribution.
+const COHORT_PANELS = {
+  UKB: MARKERS, NHANES: MARKERS, CLHLS: MARKERS,
+  CHARLS: MARKERS.filter(m => !['RBC', 'ALB'].includes(m)),
+  RuLAS: MARKERS.filter(m => m !== 'UREA')
+};
 
 function buildInputs() {
   const c = document.getElementById('inputContainer');
@@ -254,10 +306,13 @@ function zVector(values) {
   return x.map((v, j) => (v - STANDARD_REF.ref_mean[j]) / STANDARD_REF.ref_sd[j]);
 }
 
-function computeDisco(z) {
-  const mu = STANDARD_REF.mu, ss = STANDARD_REF.ss, w = STANDARD_REF.weight;
-  const Rref = STANDARD_REF.Rref, n = STANDARD_REF.n_ref, p = MARKERS.length;
-  const delta = z.map((v, j) => v - mu[j]);
+function computeDisco(z, panel = MARKERS) {
+  const indices = panel.map(m => MARKERS.indexOf(m));
+  const subset = matrix => indices.map(i => indices.map(j => matrix[i][j]));
+  const ss = subset(STANDARD_REF.ss), w = subset(STANDARD_REF.weight);
+  const Rref = subset(STANDARD_REF.Rref), n = STANDARD_REF.n_ref, p = panel.length;
+  // Keep the fixed full-panel weights when taking a subset, as in the source analysis.
+  const delta = indices.map(j => z[j] - STANDARD_REF.mu[j]);
   const ssNew = ss.map((row, i) => row.map((val, j) => val + (n/(n+1)) * delta[i] * delta[j]));
   const sn = ssNew.map((row, i) => Math.sqrt(row[i]));
   const Rnew = ssNew.map((row, i) => row.map((val, j) => val / (sn[i]*sn[j])));
@@ -360,20 +415,25 @@ document.getElementById('discoForm').addEventListener('submit', e => {
   const dm = computeDM(z);
   const cohort = document.getElementById('cohortSelect').value;
   const cs = COHORT_STATS[cohort];
-  const zs = (disco - cs.mean) / cs.sd;
-  if (![...z, disco, dm, zs].every(Number.isFinite)) {
+  const panel = COHORT_PANELS[cohort];
+  const comparisonDisco = panel.length === MARKERS.length ? disco : computeDisco(z, panel);
+  const zs = (comparisonDisco - cs.mean) / cs.sd;
+  if (![...z, disco, dm, comparisonDisco, zs].every(Number.isFinite)) {
     showError('A finite score could not be calculated from these values. Check all biomarker values and units.');
     return;
   }
   const percentile = percentileLabel(estimatePercentile(zs, cs));
   document.getElementById('discoResult').textContent = disco.toFixed(3);
+  document.getElementById('zLabel').textContent = `DISCO z-score · ${panel.length} markers`;
+  document.getElementById('pctLabel').textContent = `Estimated percentile · ${panel.length} markers`;
   document.getElementById('cohortComparison').textContent =
     zs < 0 ? 'Below cohort mean' : zs > 0 ? 'Above cohort mean' : 'At cohort mean';
   document.getElementById('dmResult').textContent = dm.toFixed(3);
   document.getElementById('zResult').textContent = zs.toFixed(2);
   document.getElementById('pctResult').textContent = percentile;
   document.getElementById('zNote').textContent =
-    `Relative to ${cohort}: DISCO z = ${zs.toFixed(2)}; estimated percentile: ${percentile}. ` +
+    `Relative to ${cohort} (${panel.length}-marker DISCO = ${comparisonDisco.toFixed(3)}): ` +
+    `DISCO z = ${zs.toFixed(2)}; estimated percentile: ${percentile}. ` +
     'z < 0 = below the cohort mean; z > 0 = above. Percentile estimates use stored quantiles.';
   document.getElementById('resultSection').classList.add('show');
 });
