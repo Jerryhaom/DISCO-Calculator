@@ -16,7 +16,7 @@ DISCO quantifies how much one person's biomarker profile perturbs the
 correlation structure of a young, healthy reference population:
 
 $$
-\mathrm{DISCO}_i \;=\; \log\Bigg[\; n_{\mathrm{ref}}^{\,2} \sum_{j \neq k} w_{jk}\, \Big( \rho_{jk}^{\mathrm{ref}} \;-\; \rho_{jk}^{\mathrm{ref}+i} \Big)^{\!2} \;\Bigg]
+\mathrm{DISCO}_i = \log\Bigg[ n_{\mathrm{ref}}^{2} \sum_{j \neq k} w_{jk} \Big( \rho_{jk}^{\mathrm{ref}} - \rho_{jk}^{\mathrm{ref}+i} \Big)^{2} \Bigg]
 $$
 
 where $\rho^{\mathrm{ref}}$ is the reference correlation matrix,
@@ -28,13 +28,13 @@ DM (Mahalanobis distance) quantifies the standardized deviation of the
 biomarker vector from the reference mean:
 
 $$
-\mathrm{DM}_i \;=\; \log\Bigg[\; \sqrt{\, (x_i - \mu)^{\top} \; \Sigma^{-1} \; (x_i - \mu) \,} \;\Bigg]
+\mathrm{DM}_i = \log\Bigg[ \sqrt{ (x_i - \mu)^{\top} \Sigma^{-1} (x_i - \mu) } \Bigg]
 $$
 
 where $\mu$ and $\Sigma$ are the mean vector and covariance matrix of the
 reference population.
 
-## How values are estimated — no raw data required
+## How values are estimated
 
 Both metrics are computed entirely from a **standard reference matrix** of
 aggregate statistics:
