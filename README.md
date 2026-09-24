@@ -69,16 +69,12 @@ predictive power across cohorts.
 
 ## References
 
-1. Hao M, Zhang H, Li Y, Huang Y, Wu J, Zhang S, et al. *Human aging reflects
-   increases in entropy across organ networks.* (manuscript).
+1. Hao M, et al. *Human aging reflects increases in entropy across organ
+   networks.* (manuscript).
 
-2. Cohen AA, Milot E, Yong J, Seplaki CL, Fülöp T, Bandeen-Roche K, Fried LP.
-   *A novel statistical approach shows evidence for multi-system physiological
-   dysregulation during aging.* Mech Ageing Dev. 2013;134(3-4):110–7.
-
-3. Cohen AA, et al. *Synchrony of biomarker variability indicates a critical
-   transition: application to mortality prediction in hemodialysis.*
-   iScience. 2022.
+2. Cohen AA, et al. *A novel statistical approach shows evidence for
+   multi-system physiological dysregulation during aging.* Mech Ageing Dev.
+   2013;134(3-4):110–7.
 
 ## Contact
 
