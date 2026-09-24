@@ -20,13 +20,13 @@ a{color:var(--secondary)}
 .brandbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:30px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .brand{display:flex;align-items:center;gap:10px;font-weight:750;color:var(--primary);letter-spacing:.12em}
 .brand-icon{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--primary);color:white;font-size:21px;line-height:1}
-.header{position:relative;overflow:hidden;background:#153b43;color:white;border-radius:22px;padding:36px 40px;margin-bottom:28px}
-.header::after{content:"";position:absolute;width:270px;height:270px;right:-90px;top:-140px;border:45px solid #ffffff06;border-radius:50%;pointer-events:none}
-.eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a4d9d4;margin-bottom:10px}
+.header{position:relative;overflow:hidden;background:#e0eeec;color:var(--primary);border:1px solid #cddedc;border-radius:22px;padding:36px 40px;margin-bottom:28px}
+.header::after{content:"";position:absolute;width:270px;height:270px;right:-90px;top:-140px;border:45px solid #6eaaa417;border-radius:50%;pointer-events:none}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#42716f;margin-bottom:10px}
 .header h1{font-size:clamp(28px,4vw,40px);font-weight:650;line-height:1.2;letter-spacing:-.04em;margin:0 0 14px}
-.header .sub{max-width:830px;font-size:14px;line-height:1.8;color:#c5d9dd;margin:0}
+.header .sub{max-width:830px;font-size:14px;line-height:1.8;color:#49666e;margin:0}
 .badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
-.chip{font-size:11px;color:#d6e9eb;padding:5px 10px;border:1px solid #ffffff24;border-radius:6px;background:#ffffff05}
+.chip{font-size:11px;color:#45636c;padding:5px 10px;border:1px solid #b9d2cf;border-radius:6px;background:#ffffff70}
 .workspace{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(300px,1fr);gap:24px;align-items:start}
 .card{display:block;background:white;border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 4px 20px #153b4303;min-width:0}
 .section-heading{display:flex;align-items:center;gap:10px;margin-bottom:9px}
@@ -73,11 +73,18 @@ button:focus-visible,a:focus-visible{outline:3px solid #087e8380;outline-offset:
 .result-footnote{border-top:1px solid var(--line);margin:20px 0 0;padding-top:16px;font-size:11px;color:var(--muted);line-height:1.7}
 .note{margin-top:24px;padding:26px 30px;background:#eaf1f1;border:1px solid #dce6e6;border-radius:15px;font-size:12px;line-height:1.9;color:#506870;min-width:0}
 .note strong{color:var(--primary)}.note .math{display:block;margin:16px 0;overflow-x:auto;text-align:center;max-width:100%}
-.references{padding:28px 4px 0;font-size:11px;color:var(--muted)}
-.references h2{font-size:14px;margin-bottom:16px}.references ol{padding-left:18px;margin:0;columns:2;column-gap:44px}.references li{padding-left:4px;margin-bottom:10px;break-inside:avoid;overflow-wrap:anywhere}
+.support-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:24px;margin-top:24px}
+.support-card{padding:24px;background:#fff;border:1px solid var(--line);border-radius:15px;font-size:11px;color:var(--muted);min-width:0}
+.support-card h2{font-size:14px;margin-bottom:18px}
+.abbreviations dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px;margin:0}
+.abbreviation-item{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;align-items:baseline}
+.abbreviation-item dt{color:var(--primary);font-size:11px;font-weight:650}.abbreviation-item dd{margin:0;overflow-wrap:anywhere}
+.references ol{padding-left:18px;margin:0}.references li{padding-left:4px;margin-bottom:14px;overflow-wrap:anywhere}
+.reference-meta{border-top:1px solid var(--line);padding-top:14px;margin-top:18px}.reference-meta p{margin:0 0 8px}.reference-meta p:last-child{margin-bottom:0}
 footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);margin-top:26px;padding-top:18px;color:var(--muted);font-size:10px}
 @media(min-width:1100px){.input-group label{font-size:13px}}
-@media(max-width:850px){.wrap{padding:20px}.workspace{grid-template-columns:1fr}#resultSection{position:static}.metrics-grid{grid-template-columns:1fr 1fr}.header{padding:28px}.empty-state{padding:15px}.references ol{columns:1}}
+@media(max-width:850px){.wrap{padding:20px}.workspace{grid-template-columns:1fr}#resultSection{position:static}.metrics-grid{grid-template-columns:1fr 1fr}.header{padding:28px}.empty-state{padding:15px}.support-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.support-card{padding:20px 16px}.abbreviations dl{grid-template-columns:1fr}}
 @media(max-width:480px){.wrap{padding:16px 12px}.brandbar{font-size:9px;margin-bottom:18px}.header{padding:25px 22px;border-radius:16px}.header .sub{font-size:12px}.chip{font-size:9px}.card,#resultSection{padding:20px 16px;border-radius:14px}.input-grid{gap:16px 12px}.input-group label{display:block;font-size:11px;min-height:37px}.marker-code{display:block;font-size:9px}.input-group input{padding-left:8px;padding-right:65px}.input-unit{right:20px;font-size:9px}.reference-range{font-size:9px}.metrics-grid{grid-template-columns:1fr}.note{padding:20px 16px}.brandbar>span{max-width:110px;text-align:right}footer{flex-direction:column;gap:3px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
 </style>
@@ -141,7 +148,7 @@ footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid 
           <div class="metric-box">
             <div class="m-label">Mahalanobis distance</div>
             <div class="m-value dm" id="dmResult">--</div>
-            <div class="text-muted" style="font-size:0.82rem;">log DM &nbsp;·&nbsp; raw DM: <span id="dmRawResult">--</span></div>
+            <div class="text-muted" style="font-size:0.82rem;">Distance from the reference mean</div>
           </div>
         </div>
       </div>
@@ -166,9 +173,10 @@ footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid 
     <em>standard reference matrix</em> of aggregate statistics (mean vector, covariance / cross-product
     matrix, and age weights). No individual-level reference data is stored or required; you only need
     your own biomarker values. CRP is transformed with ln(CRP + 1), then all 10 markers are
-    standardized using the reference means and standard deviations. The displayed scores use natural logarithms.
+    standardized using the reference means and standard deviations. DISCO uses a natural logarithm;
+    DM is the untransformed Mahalanobis distance.
     <span class="math">$$\mathrm{DISCO}_i = \log\Bigg[ n_{\mathrm{ref}}^{2} \sum_{j \neq k} w_{jk} \Big( \rho_{jk}^{\mathrm{ref}} - \rho_{jk}^{\mathrm{ref}+i} \Big)^{2} \Bigg]$$</span>
-    <span class="math">$$\mathrm{DM}_i = \log\Bigg[ \sqrt{ (x_i - \mu)^{\top} \Sigma^{-1} (x_i - \mu) } \Bigg]$$</span>
+    <span class="math">$$\mathrm{DM}_i = \sqrt{ (x_i - \mu)^{\top} \Sigma^{-1} (x_i - \mu) }$$</span>
     Here, x is the standardized biomarker vector, and the DM covariance matrix includes a small
     diagonal regularization term (10<sup>−8</sup>I). Updating the reference matrix with one individual
     is exact given these aggregate statistics, up to numerical precision.
@@ -181,20 +189,37 @@ footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid 
     adjusting for individual age or sex or estimating disease probability.
   </div>
 
-  <div class="references">
-    <h2>Abbreviations &amp; References</h2>
-    <ol>
-      <li>CRP: C-reactive protein; GLU: glucose; CHOL: total cholesterol; HDL: high-density lipoprotein cholesterol;
-          CREA: creatinine; UA: uric acid; WBC: white blood cell count; UREA: blood urea; RBC: red blood cell count;
-          ALB: albumin.</li>
-      <li>DISCO: distance of covariance; DM: Mahalanobis distance; PCC: Pearson correlation coefficient.</li>
-      <li>Hao M, et al. Human aging reflects increases in entropy across organ networks. (manuscript).</li>
-      <li>Cohen AA, et al. A novel statistical approach shows evidence for multi-system physiological
-          dysregulation during aging. Mech Ageing Dev. 2013;134(3-4):110–7.</li>
-      <li>The standard reference matrix contains only aggregate statistics (no individual data) and is freely
-          redistributable.</li>
-      <li>Email: haombio@gmail.com</li>
-    </ol>
+  <div class="support-grid">
+    <section class="support-card abbreviations" aria-labelledby="abbreviationsHeading">
+      <h2 id="abbreviationsHeading">Abbreviations</h2>
+      <dl>
+        <div class="abbreviation-item"><dt>CRP</dt><dd>C-reactive protein</dd></div>
+        <div class="abbreviation-item"><dt>GLU</dt><dd>Glucose</dd></div>
+        <div class="abbreviation-item"><dt>CHOL</dt><dd>Total cholesterol</dd></div>
+        <div class="abbreviation-item"><dt>HDL</dt><dd>High-density lipoprotein cholesterol</dd></div>
+        <div class="abbreviation-item"><dt>CREA</dt><dd>Creatinine</dd></div>
+        <div class="abbreviation-item"><dt>UA</dt><dd>Uric acid</dd></div>
+        <div class="abbreviation-item"><dt>WBC</dt><dd>White blood cell count</dd></div>
+        <div class="abbreviation-item"><dt>UREA</dt><dd>Blood urea</dd></div>
+        <div class="abbreviation-item"><dt>RBC</dt><dd>Red blood cell count</dd></div>
+        <div class="abbreviation-item"><dt>ALB</dt><dd>Albumin</dd></div>
+        <div class="abbreviation-item"><dt>DISCO</dt><dd>Distance of covariance</dd></div>
+        <div class="abbreviation-item"><dt>DM</dt><dd>Mahalanobis distance</dd></div>
+        <div class="abbreviation-item"><dt>PCC</dt><dd>Pearson correlation coefficient</dd></div>
+      </dl>
+    </section>
+    <section class="support-card references" aria-labelledby="referencesHeading">
+      <h2 id="referencesHeading">References</h2>
+      <ol>
+        <li>Hao M, et al. Human aging reflects increases in entropy across organ networks. (manuscript).</li>
+        <li>Cohen AA, et al. A novel statistical approach shows evidence for multi-system physiological
+            dysregulation during aging. Mech Ageing Dev. 2013;134(3-4):110–7.</li>
+      </ol>
+      <div class="reference-meta">
+        <p>The standard reference matrix contains only aggregate statistics (no individual data) and is freely redistributable.</p>
+        <p>Email: <a href="mailto:haombio@gmail.com">haombio@gmail.com</a></p>
+      </div>
+    </section>
   </div>
 
   <footer><span>DISCO Calculator · Distance of Covariance</span><span>Standard reference matrix · 10 biomarkers</span></footer>
@@ -265,8 +290,7 @@ function computeDM(z) {
   const Sinv = invertMatrix(S);
   let q = 0;
   for (let i = 0; i < p; i++) for (let j = 0; j < p; j++) q += d[i] * Sinv[i][j] * d[j];
-  const raw = Math.sqrt(q);
-  return { raw: raw, log: Math.log(raw) };
+  return Math.sqrt(q);
 }
 
 function estimatePercentile(z, stats) {
@@ -337,7 +361,7 @@ document.getElementById('discoForm').addEventListener('submit', e => {
   const cohort = document.getElementById('cohortSelect').value;
   const cs = COHORT_STATS[cohort];
   const zs = (disco - cs.mean) / cs.sd;
-  if (![...z, disco, dm.raw, dm.log, zs].every(Number.isFinite)) {
+  if (![...z, disco, dm, zs].every(Number.isFinite)) {
     showError('A finite score could not be calculated from these values. Check all biomarker values and units.');
     return;
   }
@@ -345,8 +369,7 @@ document.getElementById('discoForm').addEventListener('submit', e => {
   document.getElementById('discoResult').textContent = disco.toFixed(3);
   document.getElementById('cohortComparison').textContent =
     zs < 0 ? 'Below cohort mean' : zs > 0 ? 'Above cohort mean' : 'At cohort mean';
-  document.getElementById('dmResult').textContent = dm.log.toFixed(3);
-  document.getElementById('dmRawResult').textContent = dm.raw.toFixed(3);
+  document.getElementById('dmResult').textContent = dm.toFixed(3);
   document.getElementById('zResult').textContent = zs.toFixed(2);
   document.getElementById('pctResult').textContent = percentile;
   document.getElementById('zNote').textContent =

@@ -7,9 +7,9 @@ const vm = require('node:vm');
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 const script = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].at(-1)[1];
 const examples = [
-  { values: [1, 5, 4.5, 1.3, 80, 300, 6, 5, 4.8, 42], disco: -2.118126394406057, raw: 2.152268597777491, log: 0.7665224476046615 },
-  { values: [8, 7, 6, 0.8, 130, 480, 12, 9, 3.4, 30], disco: 4.921159259470046, raw: 10.030433484658058, log: 2.305623819849316 },
-  { values: [0, 3.9, 3.6, 1.6, 60, 200, 4, 2.5, 4, 50], disco: 1.4551748543547456, raw: 3.9506639677639126, log: 1.3738836578917555 }
+  { values: [1, 5, 4.5, 1.3, 80, 300, 6, 5, 4.8, 42], disco: -2.118126394406057, raw: 2.152268597777491 },
+  { values: [8, 7, 6, 0.8, 130, 480, 12, 9, 3.4, 30], disco: 4.921159259470046, raw: 10.030433484658058 },
+  { values: [0, 3.9, 3.6, 1.6, 60, 200, 4, 2.5, 4, 50], disco: 1.4551748543547456, raw: 3.9506639677639126 }
 ];
 const close = (actual, expected, tolerance = 1e-11) => assert.ok(Math.abs(actual - expected) < tolerance, `${actual} != ${expected}`);
 
@@ -32,7 +32,7 @@ function calculator() {
   }
   const context = vm.createContext({ document: { getElementById } });
   vm.runInContext(script, context);
-  const api = vm.runInContext('({ MARKERS, COHORT_STATS, zVector, computeDisco, computeDM, estimatePercentile, percentileLabel, ordinal })', context);
+  const api = vm.runInContext('({ MARKERS, COHORT_STATS, referenceMean: STANDARD_REF.mu, zVector, computeDisco, computeDM, estimatePercentile, percentileLabel, ordinal })', context);
   function fill(values = examples[0].values, cohort = 'UKB') {
     api.MARKERS.forEach((m, i) => { getElementById('in_' + m).value = String(values[i]); });
     getElementById('cohortSelect').value = cohort;
@@ -42,20 +42,18 @@ function calculator() {
   return { ...api, node: getElementById, fill, submit };
 }
 
-test('fixed examples preserve DISCO, log DM, raw DM and cohort z-scores', () => {
+test('fixed examples report untransformed DM and preserve DISCO and cohort z-scores', () => {
   const c = calculator();
   for (const example of examples) {
     const z = c.zVector(example.values);
     const dm = c.computeDM(z);
     close(c.computeDisco(z), example.disco);
-    close(dm.raw, example.raw);
-    close(dm.log, example.log);
+    close(dm, example.raw);
     for (const [cohort, stats] of Object.entries(c.COHORT_STATS)) {
       c.fill(example.values, cohort);
       c.submit();
       assert.equal(c.node('discoResult').textContent, example.disco.toFixed(3));
-      assert.equal(c.node('dmResult').textContent, example.log.toFixed(3));
-      assert.equal(c.node('dmRawResult').textContent, example.raw.toFixed(3));
+      assert.equal(c.node('dmResult').textContent, example.raw.toFixed(3));
       assert.equal(c.node('zResult').textContent, ((example.disco - stats.mean) / stats.sd).toFixed(2));
       assert.equal(c.node('resultSection').classList.contains('show'), true);
       assert.equal(c.node('formError').hidden, true);
@@ -152,4 +150,9 @@ test('comparison label follows the selected cohort mean, not fixed clinical cuto
     seen.add(expected);
   }
   assert.equal(seen.size, 2);
+});
+
+test('DM at the reference mean is zero and finite without a logarithm', () => {
+  const c = calculator();
+  assert.equal(c.computeDM(c.referenceMean), 0);
 });

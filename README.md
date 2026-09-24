@@ -28,14 +28,14 @@ DM (Mahalanobis distance) quantifies the standardized deviation of the
 biomarker vector from the reference mean:
 
 $$
-\mathrm{DM}_i = \log\Bigg[ \sqrt{ (x_i - \mu)^{\top} \Sigma^{-1} (x_i - \mu) } \Bigg]
+\mathrm{DM}_i = \sqrt{ (x_i - \mu)^{\top} \Sigma^{-1} (x_i - \mu) }
 $$
 
 Here $x_i$ is the vector after CRP transformation and reference standardization,
 and $\mu$ is the mean vector on that standardized scale. The implemented DM
 matrix is $\Sigma = ss/(n_{\text{ref}}-1) + 10^{-8}I$.
-All logarithms are natural logarithms. The main DM result is **log DM**;
-the untransformed distance is also displayed as **raw DM**.
+DISCO and the CRP preprocessing step use natural logarithms. **DM is reported
+as the untransformed Mahalanobis distance**, without a logarithm.
 
 ## How values are estimated
 
@@ -53,7 +53,7 @@ aggregate statistics:
 No individual-level reference data is stored or required. Given a person's own
 10 biomarker values, DISCO is obtained by the rank-one update
 $ss_{\text{new}} = ss + \frac{n_{\text{ref}}}{n_{\text{ref}}+1}\,\delta\delta^{\top}$
-(where $\delta = x - \mu$), and DM by the usual quadratic form
+(where $\delta = x - \mu$), and DM by the square root of the quadratic form
 $(x-\mu)^{\top} \Sigma^{-1} (x-\mu)$. The reference matrix is derived from UK
 Biobank participants aged $\le 40$ (n = 5,282) and is freely redistributable.
 
