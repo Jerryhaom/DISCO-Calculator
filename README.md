@@ -1,8 +1,12 @@
 # DISCO Calculator
 
-Web calculator for **DISCO (Distance of Covariance)** and **DM (Mahalanobis
-distance)**, measures of homeostatic dysregulation that reveal organ-system
-interconnections underlying mortality and disease risk.
+Web calculator for **DISCO (Distance of Covariance)**, a measure of entropy in
+large ensembles of biological information. DISCO demonstrates that organs and
+systems exhibit interconnected increased entropy with age, and it predicts
+mortality, frailty, and age-related chronic disease across multiple data types
+(clinical biomarkers, proteomics, metabolomics, microbiomes) in five cohorts
+(UK Biobank, NHANES, and three Chinese cohorts of older adults). The companion
+**DM (Mahalanobis distance)** is also provided.
 
 Live: https://jerryhaom.github.io/DISCO-Calculator/
 
