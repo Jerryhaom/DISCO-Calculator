@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DISCO Calculator — Distance of Covariance</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+:root { --primary:#2c3e50; --secondary:#3498db; --accent:#e74c3c; }
+body { background:linear-gradient(rgba(255,255,255,0.92),rgba(255,255,255,0.92)),
+             url('Ai-image.jpg') center/cover; font-family:'Segoe UI',system-ui,sans-serif; min-height:100vh; }
+.calculator-container { max-width:1200px; margin:2rem auto; padding:2rem; background:rgba(255,255,255,0.96);
+    border-radius:20px; box-shadow:0 12px 40px rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.3); }
+.input-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1.2rem; margin:2rem 0; }
+.input-group label { display:block; margin-bottom:0.5rem; font-weight:600; color:var(--primary); }
+.input-group input { width:100%; padding:0.8rem; border:2px solid #dfe6e9; border-radius:8px; transition:all 0.3s ease; }
+.input-group input:focus { border-color:var(--secondary); box-shadow:0 0 0 3px rgba(52,152,219,0.2); }
+.reference-range { font-size:0.85rem; color:#7f8c8d; margin-top:0.4rem; }
+#resultSection { background:linear-gradient(135deg,#e3f2fd 0%,#bbdefb 100%); border-radius:12px; padding:1.5rem;
+    margin-top:2rem; opacity:0; transform:translateY(10px); transition:all 0.4s ease; }
+#resultSection.show { opacity:1; transform:translateY(0); }
+.risk-badge { display:inline-block; padding:0.4rem 1rem; border-radius:20px; font-weight:600; }
+.notes { margin-top:2rem; padding:1.2rem; background:#f8f9fa; border-radius:12px; font-size:0.9rem; color:#555; }
+.references { margin-top:3rem; padding:2rem; background:rgba(255,255,255,0.96); border-radius:20px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.1); }
+.references h2 { color:var(--primary); border-bottom:2px solid var(--secondary); padding-bottom:1rem;
+    margin-bottom:1.5rem; text-align:center; }
+.references li { margin-bottom:0.8rem; }
+</style>
+</head>
+<body>
+<div class="calculator-container">
+  <h1 class="text-center mb-3" style="color:var(--primary);">DISCO Calculator</h1>
+  <p class="text-center text-muted mb-4">Distance of Covariance (DISCO) — a measure of homeostatic dysregulation<br>
+     using a standard reference matrix derived from UK Biobank (age ≤40, n = 5,282).</p>
+
+  <form id="discoForm">
+  <div class="mb-4">
+    <label class="form-label fw-semibold" style="color:var(--primary);">Reference cohort (for relative z-score)</label>
+    <select id="cohortSelect" class="form-select" style="max-width:300px;">
+      <option value="UKB">UK Biobank</option>
+      <option value="NHANES">NHANES</option>
+      <option value="CHARLS">CHARLS</option>
+      <option value="CLHLS">CLHLS</option>
+      <option value="RuLAS">RuLAS</option>
+    </select>
+  </div>
+
+    <div class="input-grid" id="inputContainer"></div>
+    <button type="submit" class="btn btn-primary w-100 py-2"
+            style="background:var(--secondary); border:none; padding:1rem;">
+      Calculate DISCO
+    </button>
+  </form>
+
+  <div id="resultSection">
+    <h4 class="text-center mb-3" style="color:var(--primary);">Result</h4>
+    <div class="text-center">
+      <span class="h1" style="color:var(--primary);" id="discoResult">--</span>
+      <div class="mt-2" id="riskBadge"></div>
+      <p class="text-muted mt-3 mb-0" id="resultNote"></p>
+      <hr class="my-3">
+      <div class="row justify-content-center">
+        <div class="col-auto text-center px-4">
+          <div class="text-muted small">z-score (cohort-adjusted)</div>
+          <div class="h3 mb-0" style="color:var(--secondary);" id="zResult">--</div>
+        </div>
+        <div class="col-auto text-center px-4">
+          <div class="text-muted small">percentile</div>
+          <div class="h3 mb-0" style="color:var(--secondary);" id="pctResult">--</div>
+        </div>
+      </div>
+      <p class="text-muted mt-3 mb-0 small" id="zNote"></p>
+    </div>
+  </div>
+
+  <div class="notes">
+    <strong>How it works:</strong> DISCO quantifies how much one person's biomarker profile perturbs the
+    correlation structure of a young, healthy reference population. It is computed from a
+    <em>standard reference matrix</em> (mean vector, cross-product matrix, and age weights), so no
+    individual-level reference data is required — you only need your own biomarker values.<br><br>
+    <strong>Inputs:</strong> enter biomarkers in the listed units. CRP is entered as raw mg/L and
+    log-transformed (log(CRP+1)) automatically.<br><br>
+    <strong>Interpretation:</strong> higher DISCO = greater homeostatic dysregulation. Because absolute DISCO is cohort-specific (population structure + assay calibration), we also report a cohort-adjusted z-score and percentile relative to the selected reference cohort. In validation cohorts
+    (UK Biobank, NHANES, CHARLS, CLHLS, RuLAS) elevated DISCO predicts mortality and chronic disease
+    incidence, and this standard reference matrix preserves 96–97% of predictive power across cohorts.
+  </div>
+</div>
+
+<div class="references">
+  <h2>Abbreviations &amp; References</h2>
+  <ol>
+    <li>CRP: C-reactive protein; GLU: glucose; CHOL: total cholesterol; HDL: high-density lipoprotein cholesterol;
+        CREA: creatinine; UA: uric acid; WBC: white blood cell count; UREA: blood urea; RBC: red blood cell count;
+        ALB: albumin.</li>
+    <li>Hao M, et al. Distance of Covariance (DISCO): a novel measure of network homeostatic dysregulation
+        revealing organ system interconnections underlying mortality and disease risk. (manuscript).</li>
+    <li>The standard reference matrix contains only aggregate statistics (no individual data) and is freely
+        redistributable.</li>
+    <li>Email: haombio@gmail.com</li>
+  </ol>
+</div>
+
+<script>
+const COHORT_STATS = {"UKB": {"mean": -0.7804, "sd": 1.644, "pct": [null, -1.789, -1.184, -0.55, 0.04, 0.611, 1.153, 1.512]}, "NHANES": {"mean": 0.5484, "sd": 1.5667, "pct": [null, -1.539, -1.216, -0.674, -0.059, 0.615, 1.321, 1.774]}, "CHARLS": {"mean": -0.2586, "sd": 1.6108, "pct": [null, -1.502, -1.194, -0.682, -0.075, 0.604, 1.309, 1.776]}, "CLHLS": {"mean": 1.0735, "sd": 1.7398, "pct": [null, -1.582, -1.248, -0.667, -0.029, 0.626, 1.251, 1.643]}, "RuLAS": {"mean": -0.4307, "sd": 1.4804, "pct": [null, -1.579, -1.2, -0.629, -0.049, 0.568, 1.247, 1.707]}};
+const STANDARD_REF = {"markers":["CRP","GLU","CHOL","HDL","CREA","UA","WBC","UREA","RBC","ALB"],"ref_mean":[0.887599256009213,4.90184797425218,5.32519329799318,1.37563498674744,70.8380348352896,296.641291177584,6.8677943960621,4.75043544112079,4.57204979174555,45.8812457402499],"ref_sd":[0.643974191691431,0.904627737305408,0.989049638585546,0.325922146601926,15.2464149762252,80.7178388844858,1.7976958365941,1.16327854196526,0.463154082573663,2.67332157605691],"mu":[-4.83226568272101e-17,-4.78964968153911e-16,-5.88636800541982e-17,-9.64141047700794e-17,2.63599147137904e-16,-1.96727232089723e-16,-1.62834111544322e-16,1.31810083063695e-16,5.06935988411767e-16,1.37918201408187e-15],"ss":[[5281.00000000002,354.533625569452,274.503078540211,-998.238042368022,-147.392831709652,783.556654200361,1333.02375400933,-295.685113282355,242.139343254387,-1351.39150975899],[354.533625569452,5281.00000000013,15.240176537513,-434.781405566787,-24.7175539553414,272.248256075789,-13.8898037618165,78.508265332035,273.062835303747,-43.5744689377685],[274.503078540211,15.240176537513,5281.00000000005,737.07571526868,345.155817560195,1182.68359112352,376.54482524024,293.985520099549,919.022792407039,892.176311207077],[-998.238042368022,-434.781405566787,737.07571526868,5280.99999999995,-1051.98711415094,-1805.93170561845,-257.907101283265,-327.714373088772,-1820.83108777737,41.9202039326647],[-147.392831709652,-24.7175539553414,345.155817560195,-1051.98711415094,5281.00000000001,2642.00712363693,-702.545830605421,2316.45108124716,1849.56027608734,1040.1668805546],[783.556654200361,272.248256075789,1182.68359112352,-1805.93170561845,2642.00712363693,5281.00000000002,-101.119791945237,1539.00624374407,2451.95963702263,1142.91336822031],[1333.02375400933,-13.8898037618165,376.54482524024,-257.907101283265,-702.545830605421,-101.119791945237,5281.00000000002,-353.024252359985,246.547554269934,-375.785180817328],[-295.685113282355,78.508265332035,293.985520099549,-327.714373088772,2316.45108124716,1539.00624374407,-353.024252359985,5280.99999999996,652.952002494938,720.600081702053],[242.139343254387,273.062835303747,919.022792407039,-1820.83108777737,1849.56027608734,2451.95963702263,246.547554269934,652.952002494938,5281.00000000001,1433.02605974496],[-1351.39150975899,-43.5744689377685,892.176311207077,41.9202039326647,1040.1668805546,1142.91336822031,-375.785180817328,720.600081702053,1433.02605974496,5280.99999999997]],"Rref":[[1,0.067133805258369,0.0519793748419256,-0.189024435214547,-0.0279100230467055,0.148372780571929,0.25241881348406,-0.0559903641890466,0.0458510401920822,-0.255896896375496],[0.067133805258369,1,0.00288585050890224,-0.082329370491722,-0.0046804684634238,0.0515524059980657,-0.00263014651804892,0.0148661740829453,0.0517066531535207,-0.0082511776060913],[0.0519793748419256,0.00288585050890224,1,0.139571239399485,0.0653580415754958,0.223950689476144,0.0713018036811661,0.0556685324937604,0.174024387882415,0.168940789851747],[-0.189024435214547,-0.082329370491722,0.139571239399485,1,-0.199202256040701,-0.341967753383536,-0.0488367925171873,-0.0620553632056002,-0.344789071724555,0.00793792916732912],[-0.0279100230467055,-0.0046804684634238,0.0653580415754958,-0.199202256040701,1,0.500285386032366,-0.133032726870937,0.438638720175567,0.350229175551474,0.196963999347587],[0.148372780571929,0.0515524059980657,0.223950689476144,-0.341967753383536,0.500285386032366,1,-0.0191478492606016,0.291423261455041,0.46429835959527,0.216419876580253],[0.25241881348406,-0.00263014651804892,0.0713018036811661,-0.0488367925171873,-0.133032726870937,-0.0191478492606016,1,-0.0668479932512754,0.0466857705491257,-0.0711579588747071],[-0.0559903641890466,0.0148661740829453,0.0556685324937604,-0.0620553632056002,0.438638720175567,0.291423261455041,-0.0668479932512754,1,0.123641734992414,0.136451445124419],[0.0458510401920822,0.0517066531535207,0.174024387882415,-0.344789071724555,0.350229175551474,0.46429835959527,0.0466857705491257,0.123641734992414,1,0.271355057705919],[-0.255896896375496,-0.0082511776060913,0.168940789851747,0.00793792916732912,0.196963999347587,0.216419876580253,-0.0711579588747071,0.136451445124419,0.271355057705919,1]],"weight":[[0,0.0147362435701073,0.00796411084393685,0.00632753638946072,0.0103992063471007,0.0160448907229869,0.00400588114023925,0.0368892910610036,0.0017576069636941,0.0192168851413685],[0.0147362435701073,0,0.00792495530424119,0.00629642706575488,0.0103480786638092,0.0159660060404495,0.00398618623128126,0.0367079249136975,0.00174896569154396,0.0191224053527613],[0.00796411084393685,0.00792495530424119,0,0.00340286470116149,0.00559255451420003,0.00862872829403022,0.00215430946424481,0.0198385688640915,0.000945217589776674,0.0103345845980051],[0.00632753638946072,0.00629642706575488,0.00340286470116149,0,0.00444331989999663,0.00685557915317212,0.00171161248208222,0.0157618683192899,0.000750981347757556,0.00821089276571551],[0.0103992063471007,0.0103480786638092,0.00559255451420003,0.00444331989999663,0,0.011267036308391,0.00281300814280473,0.02590438220808,0.00123422601111587,0.013494472873647],[0.0160448907229869,0.0159660060404495,0.00862872829403022,0.00685557915317212,0.011267036308391,0,0.00434017815857242,0.0399677598368848,0.00190428200141862,0.0208205641272175],[0.00400588114023925,0.00398618623128126,0.00215430946424481,0.00171161248208222,0.00281300814280473,0.00434017815857242,0,0.00997863420277528,0.000475436541568407,0.00519820961116748],[0.0368892910610036,0.0367079249136975,0.0198385688640915,0.0157618683192899,0.02590438220808,0.0399677598368848,0.00997863420277528,0,0.00437819205037782,0.0478691854873685],[0.0017576069636941,0.00174896569154396,0.000945217589776674,0.000750981347757556,0.00123422601111587,0.00190428200141862,0.000475436541568407,0.00437819205037782,0,0.00228074900165008],[0.0192168851413685,0.0191224053527613,0.0103345845980051,0.00821089276571551,0.013494472873647,0.0208205641272175,0.00519820961116748,0.0478691854873685,0.00228074900165008,0]],"n_ref":5282};
+
+const MARKER_META = {"CRP": ["C-reactive protein", "mg/L", "0\u20135", "auto log(CRP+1)"], "GLU": ["Glucose", "mmol/L", "3.9\u20136.1", ""], "CHOL": ["Total cholesterol", "mmol/L", "3.6\u20135.7", ""], "HDL": ["HDL cholesterol", "mmol/L", "1.0\u20131.6", ""], "CREA": ["Creatinine", "\u03bcmol/L", "60\u2013110", ""], "UA": ["Uric acid (urate)", "\u03bcmol/L", "200\u2013420", ""], "WBC": ["White blood cell count", "10\u2079/L", "4.0\u201310.0", ""], "UREA": ["Urea", "mmol/L", "2.5\u20137.5", ""], "RBC": ["Red blood cell count", "10\u00b9\u00b2/L", "4.0\u20135.5", ""], "ALB": ["Albumin", "g/L", "35\u201350", ""]};
+const MARKERS = STANDARD_REF.markers;
+
+function buildInputs() {
+  const c = document.getElementById('inputContainer');
+  c.innerHTML = MARKERS.map(m => {
+    const meta = MARKER_META[m];
+    const note = meta[3] ? (' | ' + meta[3]) : '';
+    return `<div class="input-group">
+      <label>${meta[0]}</label>
+      <input type="number" step="any" id="in_${m}" placeholder="Enter value">
+      <div class="reference-range">${meta[1]} | Normal: ${meta[2]}${note}</div>
+    </div>`;
+  }).join('');
+}
+
+function transform(values) {
+  // CRP input is raw mg/L -> log(CRP+1); others used as-is (already canonical)
+  return values.map((v, j) => MARKERS[j] === 'CRP' ? Math.log(v + 1) : v);
+}
+
+function computeDisco(values) {
+  const x = transform(values);
+  const z = x.map((v, j) => (v - STANDARD_REF.ref_mean[j]) / STANDARD_REF.ref_sd[j]);
+  const mu = STANDARD_REF.mu, ss = STANDARD_REF.ss, w = STANDARD_REF.weight;
+  const Rref = STANDARD_REF.Rref, n = STANDARD_REF.n_ref, p = MARKERS.length;
+  const delta = z.map((v, j) => v - mu[j]);
+  const ssNew = ss.map((row, i) => row.map((val, j) => val + (n/(n+1)) * delta[i] * delta[j]));
+  const sn = ssNew.map((row, i) => Math.sqrt(row[i]));
+  const Rnew = ssNew.map((row, i) => row.map((val, j) => val / (sn[i]*sn[j])));
+  let acc = 0;
+  for (let i = 0; i < p; i++) for (let j = 0; j < p; j++) acc += (Rref[i][j] - Rnew[i][j]) ** 2 * w[i][j];
+  return Math.log(acc * n * n);
+}
+
+function interpret(d) {
+  if (d < -0.5) return ['#2ecc71', 'Low dysregulation (below average)', 'DISCO value is low, indicating a biomarker profile close to the healthy young reference.'];
+  if (d < 1.0) return ['#3498db', 'Average dysregulation', 'DISCO value is within the typical range.'];
+  if (d < 2.5) return ['#f39c12', 'Elevated dysregulation', 'DISCO value is elevated, suggesting notable homeostatic dysregulation.'];
+  return ['#e74c3c', 'High dysregulation', 'DISCO value is high, indicating substantial homeostatic dysregulation.'];
+}
+
+document.getElementById('discoForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const vals = MARKERS.map(m => parseFloat(document.getElementById('in_'+m).value));
+  if (vals.some(v => isNaN(v))) { alert('Please fill in all biomarkers.'); return; }
+  const d = computeDisco(vals);
+  const [color, label, note] = interpret(d);
+  document.getElementById('discoResult').textContent = d.toFixed(3);
+  document.getElementById('riskBadge').innerHTML =
+    `<span class="risk-badge" style="background:${color};color:#fff;">${label}</span>`;
+  document.getElementById('resultNote').textContent = note;
+  // cohort-adjusted z-score + percentile
+  const cohort = document.getElementById('cohortSelect').value;
+  const cs = COHORT_STATS[cohort];
+  const z = (d - cs.mean) / cs.sd;
+  document.getElementById('zResult').textContent = z.toFixed(2);
+  // percentile: interpolate from reference quantiles (pct index 1..7 = 5,10,25,50,75,90,95)
+  const pcts = [5, 10, 25, 50, 75, 90, 95];
+  const q = cs.pct.slice(1);
+  let pct;
+  if (z <= q[0]) pct = 1;
+  else if (z >= q[6]) pct = 99;
+  else {
+    for (let i = 0; i < 6; i++) {
+      if (z >= q[i] && z <= q[i+1]) {
+        pct = pcts[i] + (pcts[i+1] - pcts[i]) * (z - q[i]) / (q[i+1] - q[i]);
+        break;
+      }
+    }
+  }
+  document.getElementById('pctResult').textContent = (pct >= 90 ? '≥' : '') + (pct >= 90 ? '90th' : Math.round(pct) + 'th');
+  document.getElementById('zNote').textContent =
+    `Relative to ${cohort} reference: z = ${z.toFixed(2)} (${Math.round(pct)}th percentile). ` +
+    `z<0 = below cohort average dysregulation; z>0 = above.`;
+  document.getElementById('resultSection').classList.add('show');
+});
+
+buildInputs();
+</script>
+</body>
+</html>
