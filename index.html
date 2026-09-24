@@ -94,6 +94,10 @@ footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid 
 .table-scroll{overflow-x:auto;max-width:100%;border:1px solid var(--line);border-radius:10px}.evidence-table{border-collapse:separate;border-spacing:0;width:100%;font-size:12px}.evidence-table th,.evidence-table td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:middle}.evidence-table thead th{font-size:10px;color:var(--muted);background:#f6f9f9;font-weight:650;white-space:nowrap}.evidence-table tbody th{text-align:left;color:var(--primary);font-weight:650;background:white}.evidence-table tr:last-child>*{border-bottom:0}.evidence-table .row-subtitle{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:3px}.availability-table{min-width:650px}.availability-table th:first-child{min-width:150px}.availability-table td{text-align:center;width:16%;padding:5px}.heat-cell{display:flex;align-items:center;justify-content:center;min-height:32px;border-radius:5px;background:#087e83;color:#fff;font-size:13px;font-weight:650}.heat-cell.unavailable{background:#edf0f1;color:#7b8b91}.availability-table tbody th{font-size:11px}.availability-table tbody th,.performance-table tbody th{position:sticky;left:0;z-index:1}.availability-table thead th{text-align:center}.availability-table thead th:first-child{text-align:left}
 .evidence-footnote{font-size:11px;color:var(--muted);line-height:1.8;margin:12px 0 0}.performance-heading{margin:28px 0 12px;font-size:15px;color:var(--primary)}.performance-table{min-width:850px;font-variant-numeric:tabular-nums}.performance-table td{text-align:center;white-space:nowrap}.performance-table thead th{text-align:center}.performance-table thead th:first-child{text-align:left}.performance-table .metric-group{color:var(--secondary);background:#edf6f4;font-size:11px}.performance-table td .ci{display:block;font-size:10px;color:var(--muted);margin-top:3px}.evidence-methods{font-size:11px;color:var(--muted);margin-top:18px;border-top:1px solid var(--line);padding-top:14px}.evidence-methods summary{font-weight:650;color:var(--primary);cursor:pointer}.evidence-methods p{margin:10px 0 0}
 @media(max-width:480px){.cohort-evidence{padding:20px 16px}.evidence-header h2{font-size:18px}.evidence-table th,.evidence-table td{padding:10px 12px}.availability-table td{padding:4px}}
+.reference-guidance{margin-top:24px;padding:28px;background:var(--card);border:1px solid var(--line);border-radius:18px;scroll-margin-top:24px}
+.reference-guidance .eyebrow{color:var(--secondary);margin-bottom:6px}.reference-guidance h2{font-size:20px}.guidance-intro{font-size:12px;color:var(--muted);margin:8px 0 22px}.guidance-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}.guidance-item h3,.guidance-limits h3{font-size:14px;line-height:1.5;color:var(--primary);font-weight:650;margin:0 0 10px}.guidance-item p,.guidance-limits p{font-size:12px;line-height:1.8;color:var(--muted);margin:0 0 12px}.reference-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 10px}.reference-stat{padding:14px 16px;background:#edf6f4;border:1px solid #d8e8e5;border-radius:9px}.reference-stat strong{display:block;font-size:26px;line-height:1.3;letter-spacing:-.03em;font-weight:650;color:var(--secondary);font-variant-numeric:tabular-nums}.reference-stat span{display:block;font-size:10px;color:var(--muted);margin-top:4px}.guidance-item .guidance-caption{font-size:11px;line-height:1.7}.guidance-links{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:11px;margin-top:12px}.guidance-limits{border-top:1px solid var(--line);margin-top:22px;padding-top:18px}.guidance-limits p{margin-bottom:0}
+@media(max-width:850px){.guidance-grid{grid-template-columns:1fr;gap:22px}.guidance-item+.guidance-item{border-top:1px solid var(--line);padding-top:20px}}
+@media(max-width:480px){.reference-guidance{padding:20px 16px}.reference-guidance h2{font-size:18px}.reference-stat{padding:12px}.reference-stat strong{font-size:24px}}
 </style>
 </head>
 <body>
@@ -233,6 +237,39 @@ footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid 
       <p><strong>Proportional-hazards check.</strong> Score-specific Schoenfeld-residual tests give p &lt; 0.05 for UK Biobank DISCO (p = 8.72e-07); UK Biobank DM (p = 1.66e-16); NHANES DISCO (p = 1.74e-05); CHARLS DISCO (p = 0.012). These results indicate departures from proportional hazards; the displayed HRs summarize the fitted associations and warrant time-varying-effect sensitivity analyses. Other test p-values are in the downloadable results.</p>
       <p><strong>Provenance.</strong> Recomputed 2026-09-24 using the existing cohort biomarker and survival files and available covariates. <a href="data/cohort-evidence.json" download>Download aggregate results (JSON)</a> · <a href="scripts/rebuild-cohort-evidence.R">Reproduction script</a>. Only aggregate results are published; participant-level inputs remain outside this repository.</p>
     </div></details>
+  </section>
+
+  <section class="reference-guidance" id="referenceGuidance" aria-labelledby="referenceGuidanceHeading">
+    <div class="eyebrow">Reference &amp; generalizability</div>
+    <h2 id="referenceGuidanceHeading">Using a standard reference</h2>
+    <p class="guidance-intro">This calculator uses fixed UK Biobank reference parameters. You can score an individual without recruiting a local reference group, provided the biomarker measurements and units are compatible.</p>
+    <div class="guidance-grid">
+      <div class="guidance-item">
+        <h3>Why approximately 200 reference participants?</h3>
+        <p>About 200 is an empirical recommendation for <strong>estimating a new reference</strong> in the clinical panels studied. It is not a universal minimum or a requirement for using this calculator.</p>
+        <div class="reference-stats" aria-label="Mean Spearman correlation with full-reference DISCO scores">
+          <div class="reference-stat"><strong>0.993</strong><span>200 reference participants</span></div>
+          <div class="reference-stat"><strong>0.997</strong><span>500 reference participants</span></div>
+        </div>
+        <p class="guidance-caption">Mean Spearman ρ with full-reference scores in NHANES: 50 random reference samples per size, compared with the full reference of 4,734 participants. This sensitivity analysis used a <strong>24-marker panel</strong>, distinct from this calculator's 10-marker panel; biomarker definitions and age weights were held fixed.</p>
+        <p class="guidance-caption">Larger references remain preferable when available. Dataset-specific stability checks are needed when building a new reference.</p>
+      </div>
+      <div class="guidance-item">
+        <h3>Can the reference be used across cohorts?</h3>
+        <p>The fixed UKB reference was applied to NHANES, CHARLS, CLHLS and RuLAS using their available 10-, 8- or 9-marker panels, as shown above.</p>
+        <p>Compared with cohort-specific references on the same participants, the change in fully adjusted C-index was <strong>−0.003 to +0.006</strong> (standard minus cohort-specific reference). For DISCO alone, C-index decreased by <strong>0.012–0.029</strong>.</p>
+        <p>These results support reference transfer with a performance trade-off. They do not establish identical performance or non-inferiority. Cox models were fitted within each receiving cohort, so this evaluates transfer of the score, not external validation of a fixed mortality prediction model.</p>
+        <p class="guidance-caption">A shared reference removes the need for a new local reference group; adequate sample sizes are still needed for outcome studies.</p>
+      </div>
+    </div>
+    <div class="guidance-limits">
+      <h3>Comparison with epigenetic clocks</h3>
+      <p>Comparisons using cohort-specific DISCO references and externally trained epigenetic clocks involve different validation conditions. Clinical biomarker reference transfer does not establish equivalent portability for methylation-based or other high-dimensional DISCO implementations. DISCO may complement established aging biomarkers; its performance depends on the panel, reference population and measurement harmonization.</p>
+    </div>
+    <div class="guidance-links" aria-label="Reference analysis data">
+      <a href="data/reference-stability.json" download>Reference-size results (JSON)</a>
+      <a href="data/reference-transport.json" download>Cross-cohort comparison (JSON)</a>
+    </div>
   </section>
 
   <div class="support-grid">
