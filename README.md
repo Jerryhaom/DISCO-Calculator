@@ -11,22 +11,23 @@ Live: https://jerryhaom.github.io/DISCO-Calculator/
 DISCO quantifies how much one person's biomarker profile perturbs the
 correlation structure of a young, healthy reference population:
 
-```
-DISCO_i = log( n_ref² · Σ_j,k  w_jk · (PCC_ref_jk − PCC_ref+i_jk)² )
-```
+$$
+\text{DISCO}_i = \log\!\Big( n_{\text{ref}}^2 \sum_{j,k} w_{jk}\, \big( \text{PCC}_{jk}^{\text{ref}} - \text{PCC}_{jk}^{\text{ref}+i} \big)^2 \Big)
+$$
 
-where `PCC_ref` is the reference correlation matrix, `PCC_ref+i` is the
-correlation matrix after adding individual *i*, `w` is an age-based weight
-matrix, and `n_ref` is the reference sample size.
+where $\text{PCC}^{\text{ref}}$ is the reference correlation matrix,
+$\text{PCC}^{\text{ref}+i}$ is the correlation matrix after adding individual
+$i$, $w$ is an age-based weight matrix, and $n_{\text{ref}}$ is the reference
+sample size.
 
 DM (Mahalanobis distance) quantifies the standardized deviation of the
 biomarker vector from the reference mean:
 
-```
-DM_i = log( √( (x_i − μ)ᵀ S⁻¹ (x_i − μ) ) )
-```
+$$
+\text{DM}_i = \log\!\Big( \sqrt{ (x_i - \mu)^\top \, S^{-1} \, (x_i - \mu) } \Big)
+$$
 
-where `μ` and `S` are the mean vector and covariance matrix of the reference
+where $\mu$ and $S$ are the mean vector and covariance matrix of the reference
 population.
 
 ## How values are estimated — no raw data required
@@ -34,24 +35,26 @@ population.
 Both metrics are computed entirely from a **standard reference matrix** of
 aggregate statistics:
 
-- `μ` — reference mean vector (10 values)
-- `ss` — cross-product matrix, from which the covariance `S = ss/(n_ref−1)`
-  and correlation matrix `PCC` are derived (10×10)
-- `w` — age-based weight matrix (10×10)
-- `n_ref` — reference sample size
+- $\mu$ — reference mean vector (10 values)
+- $ss$ — cross-product matrix, from which the covariance $S = ss/(n_{\text{ref}}-1)$
+  and correlation matrix $\text{PCC}$ are derived ($10\times10$)
+- $w$ — age-based weight matrix ($10\times10$)
+- $n_{\text{ref}}$ — reference sample size
 
 No individual-level reference data is stored or required. Given a person's own
 10 biomarker values, DISCO is obtained by the rank-one update
-`ss_new = ss + (n_ref/(n_ref+1))·δδᵀ` (where `δ = x − μ`), and DM by the usual
-quadratic form `(x−μ)ᵀS⁻¹(x−μ)`. The reference matrix is derived from UK
-Biobank participants aged ≤40 (n = 5,282) and is freely redistributable.
+$ss_{\text{new}} = ss + \frac{n_{\text{ref}}}{n_{\text{ref}}+1}\,\delta\delta^{\top}$
+(where $\delta = x - \mu$), and DM by the usual quadratic form
+$(x-\mu)^{\top} S^{-1} (x-\mu)$. The reference matrix is derived from UK
+Biobank participants aged $\le 40$ (n = 5,282) and is freely redistributable.
 
 ## Inputs (10 biomarkers)
 
 CRP, glucose, total cholesterol, HDL cholesterol, creatinine, uric acid, white
 blood cell count, urea, red blood cell count, albumin.
 
-CRP is entered as raw mg/L and log-transformed (`log(CRP+1)`) automatically.
+CRP is entered as raw mg/L and log-transformed ($\log(\text{CRP}+1)$)
+automatically.
 
 ## Interpretation
 
