@@ -114,6 +114,13 @@ in this repository. The new aggregate evidence and its reconstruction script
 make the mortality estimates auditable, but do not establish clinical cutoffs,
 absolute risk calibration, or held-out predictive performance.
 
+The calculator's fixed 10/8/9-marker mortality evidence is a separate analysis
+from the full-panel manuscript Table 1. It retains its documented raw-DM,
+BMI/physical-activity-adjusted formulas and apparent adjusted C-index. Do not
+copy those numbers into the manuscript's log(DM), core-adjusted HR / crude
+C-index Table 1. That approved table and IPAQ sensitivity are reproduced by
+the companion analysis repository's dated `approved` entries.
+
 ## Biomarker coverage and mortality evidence
 
 The page includes an accessible 10-by-5 availability heatmap and separate

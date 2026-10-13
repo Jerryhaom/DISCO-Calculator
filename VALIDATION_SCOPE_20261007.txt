@@ -1,0 +1,19 @@
+Calculator test and mortality-evidence scope
+
+The current local candidate ran all 15 existing calculator/evidence tests,
+with zero failures/skips. Numerical clinical examples retain their independent
+R-derived frozen-reference expectations. This is not a new cohort-model fit.
+
+data/cohort-evidence.json remains the dated 24 September 2026 analysis:
+10 markers (8 in CHARLS, 9 in RuLAS), fixed UKB reference, raw DM, expanded
+covariates and full-adjusted apparent C-index. Its UKB source population is the
+older 487,517-person snapshot. These estimands/sample/endpoints differ from the
+current manuscript Table1 full panels, log(DM), core adjustment, updated UKB
+487,335-person analysis and crude C-index. It must not be relabelled as that
+Table1 or updated by copying its HR/C-index numbers.
+
+The evidence JSON and HTML are preserved for historical/source transparency.
+The new aggregate Table1/Meta entry is in
+DISCO_Code/submission_20261007/release_validation_20261007/.
+An eventual refreshed 10-marker mortality-evidence fit must use its own defined
+model and endpoint contract. Existing test success alone does not refresh it.
